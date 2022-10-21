@@ -14,7 +14,6 @@
 }
 
 #chess-board {
-  border: 5px solid black;
   border-collapse: collapse;
 }
 #chess-board tr {
@@ -27,6 +26,10 @@
   height: 60px;
   width: 60px;
 }
+#chess-board td div {
+  height: 100%;
+  width: 100%;
+}
 
 .white,
 .black {
@@ -34,11 +37,37 @@
 }
 .white div,
 .black div {
-  height: 100%;
-  width: 100%;
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+}
+.white div:hover,
+.black div:hover {
+  cursor: pointer;
+}
+
+.highlight {
+  background-color: #5c8e53 !important;
+}
+
+.highlight-1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.highlight-1 div {
+  height: 30% !important;
+  width: 30% !important;
+  border-radius: 100%;
+  background-color: #5c8e53;
+}
+.highlight-1:hover div {
+  background-color: white;
+}
+
+.highlight-2 {
+  background-color: #be6069 !important;
 }
 
 td.black.pawn div {

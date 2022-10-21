@@ -14,7 +14,6 @@
 }
 
 #chess-board {
-    border: 5px solid black;
     border-collapse: collapse;
 
     tr {
@@ -29,6 +28,11 @@
     td {
         height: 60px;
         width: 60px;
+
+        div {
+            height: 100%;
+            width: 100%;
+        }
     }
 }
 
@@ -37,12 +41,40 @@
     padding: 5px;
 
     div {
-        height: 100%;
-        width: 100%;
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
+
+        &:hover {
+            cursor: pointer;
+        }
     }
+}
+
+.highlight {
+    background-color: #5c8e53 !important;
+}
+
+.highlight-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    div {
+        height: 30% !important;
+        width: 30% !important;
+        border-radius: 100%;
+        background-color: #5c8e53;
+    }
+
+    &:hover div {
+        background-color: white;
+    }
+}
+
+.highlight-2 {
+    background-color: #be6069 !important;
 }
 
 td.black.pawn div {
