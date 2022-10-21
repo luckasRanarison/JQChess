@@ -1,0 +1,90 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #363636;
+}
+
+#chess-board {
+  border: 5px solid black;
+  border-collapse: collapse;
+}
+#chess-board tr {
+  background-color: #512a2a;
+}
+#chess-board tr:nth-child(odd) td:nth-child(even), #chess-board tr:nth-child(even) td:nth-child(odd) {
+  background-color: #7c4c3e;
+}
+#chess-board td {
+  height: 60px;
+  width: 60px;
+}
+
+.white,
+.black {
+  padding: 5px;
+}
+.white div,
+.black div {
+  height: 100%;
+  width: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+td.black.pawn div {
+  background-image: url("../assets/b_pawn.png ");
+}
+
+td.black.rook div {
+  background-image: url("../assets/b_rook.png ");
+}
+
+td.black.knight div {
+  background-image: url("../assets/b_knight.png ");
+}
+
+td.black.bishop div {
+  background-image: url("../assets/b_bishop.png ");
+}
+
+td.black.queen div {
+  background-image: url("../assets/b_queen.png ");
+}
+
+td.black.king div {
+  background-image: url("../assets/b_king.png ");
+}
+
+td.white.pawn div {
+  background-image: url("../assets/w_pawn.png ");
+}
+
+td.white.rook div {
+  background-image: url("../assets/w_rook.png ");
+}
+
+td.white.knight div {
+  background-image: url("../assets/w_knight.png ");
+}
+
+td.white.bishop div {
+  background-image: url("../assets/w_bishop.png ");
+}
+
+td.white.queen div {
+  background-image: url("../assets/w_queen.png ");
+}
+
+td.white.king div {
+  background-image: url("../assets/w_king.png ");
+}
