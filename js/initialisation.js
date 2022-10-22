@@ -1,4 +1,3 @@
-// globals
 class Player {
     constructor(name, className) {
         this.name = name;
@@ -6,6 +5,7 @@ class Player {
     }
 }
 
+// globals
 const TYPES = ["pawn", "rook", "knight", "bishop", "queen", "king"];
 
 let player1 = new Player("white", ".white");

@@ -51,14 +51,10 @@
 }
 
 .highlight-1 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 20px;
   cursor: pointer;
 }
 .highlight-1 div {
-  height: 30% !important;
-  width: 30% !important;
   border-radius: 100%;
   background-color: #5c8e53;
 }

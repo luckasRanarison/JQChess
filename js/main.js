@@ -22,11 +22,11 @@ function selection() {
         }
     }
 
-    // position the board
+    // position the board [y,x]
     x = current.piece.index();
     y = current.piece.parent().index("tr");
 
-    // functions for finding possible moves (fill the possibleMoves array)
+    // functions for finding possible moves (fill the possibleMoves and possibeCaptures array)
     switch (current.type) {
         case "pawn":
             movePawn();
@@ -73,7 +73,7 @@ function movePawn() {
     }
 
     for (let i = 1; i <= max; i++) {
-        let temp = $(`tr:eq(${operation(y, i)})>td:eq(${x})`);
+        let temp = atIndex(operation(y, i), x);
 
         if (temp.hasClass("white") || temp.hasClass("black")) {
             break;
@@ -84,12 +84,12 @@ function movePawn() {
     }
 
     // capture
-    let case1 = $(`tr:eq(${operation(y, 1)})>td:eq(${x + 1})`);
-    let case2 = $(`tr:eq(${operation(y, 1)})>td:eq(${x - 1})`);
+    let capture1 = atIndex(operation(y, 1), x + 1);
+    let capture2 = atIndex(operation(y, 1), x - 1);
 
-    let cases = [case1, case2];
+    let captures = [capture1, capture2];
 
-    for (const capt of cases) {
+    for (const capt of captures) {
         if (capt.hasClass(opponent.name)) {
             possibleCaptures.push(capt);
             capt.on("click", move);
@@ -98,8 +98,53 @@ function movePawn() {
 }
 
 function moveRook() {
-    console.log("rook");
-    // todo
+    // y axis
+    let operation = addition;
+    for (let i = 0; i < 2; i++) {
+        let j = operation(y, 1);
+        let temp = atIndex(j, x);
+
+        if (temp.length !== 0 && j > 0) {
+            while (!temp.hasClass(player.name)) {
+                if (temp.hasClass(opponent.name)) {
+                    possibleCaptures.push(temp);
+                    temp.on("click", move);
+                    break;
+                }
+
+                possibleMoves.push(temp);
+                temp.on("click", move);
+                j = operation(j, 1);
+                temp = atIndex(j, x);
+
+                if (temp.length === 0) break;
+            }
+        }
+        operation = substraction;
+    }
+
+    // x axis
+    for (let i = 0; i < 2; i++) {
+        let j = operation(x, 1);
+        let temp = atIndex(y, j);
+        if (temp.length !== 0 && j > 0) {
+            while (!temp.hasClass(player.name)) {
+                if (temp.hasClass(opponent.name)) {
+                    possibleCaptures.push(temp);
+                    temp.on("click", move);
+                    break;
+                }
+
+                possibleMoves.push(temp);
+                temp.on("click", move);
+                j = operation(j, 1);
+                temp = atIndex(y, j);
+
+                if (temp.length === 0) break;
+            }
+        }
+        operation = addition;
+    }
 }
 
 function moveKnight() {
@@ -170,11 +215,9 @@ function end() {
     // todo
 }
 
-// lol
-function addition(x, y) {
-    return x + y;
-}
+const atIndex = (i, j) => $(`tr:eq(${i})>td:eq(${j})`);
 
-function substraction(x, y) {
-    return x - y;
-}
+// lol
+const addition = (x, y) => x + y;
+
+const substraction = (x, y) => x - y;
