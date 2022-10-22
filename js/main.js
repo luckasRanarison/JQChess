@@ -92,32 +92,42 @@ function movePawn() {
     for (const capt of cases) {
         if (capt.hasClass(opponent.name)) {
             possibleCaptures.push(capt);
-            capt.on("click", capture);
+            capt.on("click", move);
         }
     }
 }
 
 function moveRook() {
     console.log("rook");
+    // todo
 }
 
 function moveKnight() {
     console.log("knight");
+    // todo
 }
 
 function moveBishop() {
     console.log("bishop");
+    // todo
 }
 
 function moveQueen() {
     console.log("queen");
+    // todo
 }
 
 function moveKing() {
     console.log("king");
+    // todo
+}
+
+function threat() {
+    // todo
 }
 
 function move() {
+    $(this).removeClass(opponent.name);
     $(this).addClass(current.class.value);
     current.piece.removeClass();
     current.piece.off();
@@ -133,23 +143,12 @@ function disableMoves() {
     }
 
     for (const capt of possibleCaptures) {
-        capt.removeClass("highlight-2");
+        capt.removeClass("highlight highlight-2");
         capt.off();
     }
 
     possibleMoves = [];
     possibleCaptures = [];
-}
-
-function capture() {
-    $(this).removeClass();
-    $(this).addClass(current.class.value);
-    $(this).removeClass("highlight");
-    current.piece.removeClass();
-    current.piece.off();
-
-    disableMoves();
-    alternate();
 }
 
 function alternate() {
@@ -161,6 +160,14 @@ function alternate() {
     $(opponent.className).off();
 
     console.log(`It's ${player.name}'s turn`);
+}
+
+function victoryChechk() {
+    // todo
+}
+
+function end() {
+    // todo
 }
 
 // lol

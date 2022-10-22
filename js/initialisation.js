@@ -11,22 +11,26 @@ const TYPES = ["pawn", "rook", "knight", "bishop", "queen", "king"];
 let player1 = new Player("white", ".white");
 let player2 = new Player("black", ".black");
 let player, opponent, current;
-let possibleMoves = [];
-let possibleCaptures = [];
-let x, y;
+let x, y; // position on the board [y,x]
+let possibleMoves, possibleCaptures; //will be used for detecting threats later on
 
+// game initialisation
 function initialisation() {
     player = player1;
     opponent = player2;
 
     current = {
         piece: undefined,
+        class: undefined,
         type: undefined,
     };
 
-    // pieces
+    possibleMoves = [];
+    possibleCaptures = [];
+
+    // place pieces on the board
     $("td")
-        .slice(48)
+        .slice(48) //(48, 63)
         .each(function () {
             $(this).addClass("white");
         });
@@ -53,6 +57,6 @@ function initialisation() {
 
     $("td:eq(4), td:eq(60)").addClass("queen");
 
-    // selection init
+    // add click event to current player pieces
     $(player.className).on("click", selection);
 }
