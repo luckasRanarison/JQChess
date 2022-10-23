@@ -31,47 +31,8 @@ function movePawn() {
 }
 
 function moveRook() {
-    // y axis
-    // let operation = addition;
-    // for (let i = 0; i < 2; i++) {
-    //     let j = operation(y, 1);
-    //     let temp = atIndex(j, x);
-    //     if (temp.length !== 0 && j > 0) {
-    //         while (!temp.hasClass(player.name)) {
-    //             if (temp.hasClass(opponent.name)) {
-    //                 possibleCaptures.push(temp);
-    //                 temp.on("click", move);
-    //                 break;
-    //             }
-    //             possibleMoves.push(temp);
-    //             temp.on("click", move);
-    //             j = operation(j, 1);
-    //             temp = atIndex(j, x);
-    //             if (temp.length === 0) break;
-    //         }
-    //     }
-    //     operation = substraction;
-    // }
-    // x axis
-    // for (let i = 0; i < 2; i++) {
-    //     let j = operation(x, 1);
-    //     let temp = atIndex(y, j);
-    //     if (temp.length !== 0 && j > 0) {
-    //         while (!temp.hasClass(player.name)) {
-    //             if (temp.hasClass(opponent.name)) {
-    //                 possibleCaptures.push(temp);
-    //                 temp.on("click", move);
-    //                 break;
-    //             }
-    //             possibleMoves.push(temp);
-    //             temp.on("click", move);
-    //             j = operation(j, 1);
-    //             temp = atIndex(y, j);
-    //             if (temp.length === 0) break;
-    //         }
-    //     }
-    //     operation = addition;
-    // }
+    linearMove("x");
+    linearMove("y");
 }
 
 function moveKnight() {
@@ -85,13 +46,58 @@ function moveBishop() {
 }
 
 function moveQueen() {
-    console.log("queen");
+    linearMove("x");
+    linearMove("y");
     // todo
 }
 
 function moveKing() {
     console.log("king");
     // todo
+}
+
+function linearMove(static) {
+    // "x" as parameter for horizontal moves and "y" for vertical ones
+    operation = addition;
+
+    for (let i = 0; i < 2; i++) {
+        switch (static) {
+            case "x":
+                j = operation(currentPiece.y, 1);
+                temp = atIndex(j, currentPiece.x);
+                break;
+            case "y":
+                j = operation(currentPiece.x, 1);
+                temp = atIndex(currentPiece.y, j);
+                break;
+        }
+
+        while (!temp.hasClass(player.name) && temp.length !== 0) {
+            //prevent query loop
+            if (j < 0) break;
+
+            // capture
+            if (temp.hasClass(opponent.name)) {
+                possibleCaptures.push(temp);
+                break;
+            }
+
+            // move
+            possibleMoves.push(temp);
+
+            j = operation(j, 1);
+            switch (static) {
+                case "x":
+                    temp = atIndex(j, currentPiece.x);
+                    break;
+                case "y":
+                    temp = atIndex(currentPiece.y, j);
+                    break;
+            }
+        }
+
+        operation = substraction;
+    }
 }
 
 const MOVES = {
