@@ -28,7 +28,7 @@ let player1 = new Player("white", ".white", 6, substraction);
 let player2 = new Player("black", ".black", 1, addition);
 let player, opponent;
 let currentPiece;
-let possibleMoves, possibleCaptures; //will be used for detecting threats later on
+let possibleMoves, possibleCaptures; // will be used for detecting threats later on
 
 // game initialisation
 function initialisation() {

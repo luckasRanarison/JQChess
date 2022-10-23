@@ -31,8 +31,8 @@ function movePawn() {
 }
 
 function moveRook() {
-    linearMove("x");
-    linearMove("y");
+    linearMove("horizontal");
+    linearMove("vertical");
 }
 
 function moveKnight() {
@@ -41,15 +41,15 @@ function moveKnight() {
 }
 
 function moveBishop() {
-    crossMove("same");
-    crossMove("opposite");
+    linearMove("oblique1");
+    linearMove("oblique2");
 }
 
 function moveQueen() {
-    linearMove("x");
-    linearMove("y");
-    crossMove("same");
-    crossMove("opposite");
+    linearMove("horizontal");
+    linearMove("vertical");
+    linearMove("oblique1");
+    linearMove("oblique2");
 }
 
 function moveKing() {
@@ -57,68 +57,33 @@ function moveKing() {
     // todo
 }
 
-function linearMove(static) {
-    // "x" as parameter for horizontal moves and "y" for vertical ones
+function linearMove(direction) {
+    //initialisation
+    let j, k;
     operation = addition;
+    operationMirror = substraction;
 
     for (let i = 0; i < 2; i++) {
-        switch (static) {
-            case "x":
+        switch (direction) {
+            case "horizontal":
                 j = operation(currentPiece.y, 1);
                 temp = atIndex(j, currentPiece.x);
                 break;
-            case "y":
+            case "vertical":
                 j = operation(currentPiece.x, 1);
                 temp = atIndex(currentPiece.y, j);
                 break;
-        }
-
-        while (!temp.hasClass(player.name) && temp.length !== 0) {
-            //prevent query loop
-            if (j < 0) break;
-
-            // capture
-            if (temp.hasClass(opponent.name)) {
-                possibleCaptures.push(temp);
+            case "oblique1":
+                j = operation(currentPiece.y, 1);
+                k = operation(currentPiece.x, 1);
+                temp = atIndex(j, k);
                 break;
-            }
-
-            // move
-            possibleMoves.push(temp);
-
-            j = operation(j, 1);
-            switch (static) {
-                case "x":
-                    temp = atIndex(j, currentPiece.x);
-                    break;
-                case "y":
-                    temp = atIndex(currentPiece.y, j);
-                    break;
-            }
-        }
-
-        operation = substraction;
-    }
-}
-
-function crossMove(sign) {
-    // "same" if x and y increment or decrement with the same operaion (+ , -)
-    operation1 = addition;
-    operation2 = substraction;
-
-    for (let i = 0; i < 2; i++) {
-        switch (sign) {
-            case "same":
-                j = operation1(currentPiece.y, 1);
-                k = operation1(currentPiece.x, 1);
-                break;
-            case "opposite":
-                j = operation1(currentPiece.y, 1);
-                k = operation2(currentPiece.x, 1);
+            case "oblique2":
+                j = operation(currentPiece.y, 1);
+                k = operationMirror(currentPiece.x, 1);
+                temp = atIndex(j, k);
                 break;
         }
-
-        temp = atIndex(j, k);
 
         while (!temp.hasClass(player.name) && temp.length !== 0) {
             //prevent query loop
@@ -133,23 +98,30 @@ function crossMove(sign) {
             // move
             possibleMoves.push(temp);
 
-            switch (sign) {
-                case "same":
-                    j = operation1(j, 1);
-                    k = operation1(k, 1);
+            switch (direction) {
+                case "horizontal":
+                    j = operation(j, 1);
+                    temp = atIndex(j, currentPiece.x);
                     break;
-                case "opposite":
-                    j = operation1(j, 1);
-                    k = operation2(k, 1);
+                case "vertical":
+                    j = operation(j, 1);
+                    temp = atIndex(currentPiece.y, j);
+                    break;
+                case "oblique1":
+                    j = operation(j, 1);
+                    k = operation(k, 1);
+                    temp = atIndex(j, k);
+                    break;
+                case "oblique2":
+                    j = operation(j, 1);
+                    k = operationMirror(k, 1);
+                    temp = atIndex(j, k);
                     break;
             }
-
-            temp = atIndex(j, k);
         }
 
-        // swap the two operations
-        operation1 = substraction;
-        operation2 = addition;
+        operation = substraction;
+        operationMirror = addition;
     }
 }
 
