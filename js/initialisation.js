@@ -1,32 +1,56 @@
 class Player {
-    constructor(name, className) {
+    constructor(name, className, frontLine, operation) {
         this.name = name;
         this.className = className;
+        this.frontLine = frontLine;
+        this.operation = operation;
+        // the last two will be used for pawn moves
+    }
+}
+
+class Piece {
+    constructor(element, classList, type, x, y) {
+        this.element = element;
+        this.classList = classList;
+        this.type = type;
+        this.x = x;
+        this.y = y;
     }
 }
 
 // globals
-const TYPES = ["pawn", "rook", "knight", "bishop", "queen", "king"];
+const addition = (x, y) => x + y;
+const substraction = (x, y) => x - y;
 
-let player1 = new Player("white", ".white");
-let player2 = new Player("black", ".black");
-let player, opponent, current;
-let x, y; // position on the board [y,x]
+const atIndex = (i, j) => $(`tr:eq(${i})>td:eq(${j})`);
+
+let player1 = new Player("white", ".white", 6, substraction);
+let player2 = new Player("black", ".black", 1, addition);
+let player, opponent;
+let currentPiece;
 let possibleMoves, possibleCaptures; //will be used for detecting threats later on
 
 // game initialisation
 function initialisation() {
+    // variables initialisation
     player = player1;
     opponent = player2;
 
-    current = {
-        piece: undefined,
-        class: undefined,
-        type: undefined,
-    };
-
+    currentPiece = new Piece();
     possibleMoves = [];
     possibleCaptures = [];
+
+    // create the board
+    for (let i = 0; i < 8; i++) {
+        let tr = document.createElement("tr");
+        $("#chess-board").append(tr);
+
+        for (let j = 0; j < 8; j++) {
+            let td = document.createElement("td");
+            $(tr).append(td);
+            $(td).append("<div></div>");
+        }
+    }
 
     // place pieces on the board
     $("td")

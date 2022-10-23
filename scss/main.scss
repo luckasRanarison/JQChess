@@ -16,6 +16,7 @@
 #chess-board {
     border-collapse: collapse;
 
+    // create the chessboard pattern
     tr {
         background-color: #512a2a;
 
@@ -73,6 +74,7 @@
     background-color: #be6069 !important;
 }
 
+// pieces as background images
 td.black.pawn div {
     background-image: url("../assets/b_pawn.png ");
 }
