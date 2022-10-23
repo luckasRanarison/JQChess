@@ -41,14 +41,15 @@ function moveKnight() {
 }
 
 function moveBishop() {
-    console.log("bishop");
-    // todo
+    crossMove("same");
+    crossMove("opposite");
 }
 
 function moveQueen() {
     linearMove("x");
     linearMove("y");
-    // todo
+    crossMove("same");
+    crossMove("opposite");
 }
 
 function moveKing() {
@@ -97,6 +98,58 @@ function linearMove(static) {
         }
 
         operation = substraction;
+    }
+}
+
+function crossMove(sign) {
+    // "same" if x and y increment or decrement with the same operaion (+ , -)
+    operation1 = addition;
+    operation2 = substraction;
+
+    for (let i = 0; i < 2; i++) {
+        switch (sign) {
+            case "same":
+                j = operation1(currentPiece.y, 1);
+                k = operation1(currentPiece.x, 1);
+                break;
+            case "opposite":
+                j = operation1(currentPiece.y, 1);
+                k = operation2(currentPiece.x, 1);
+                break;
+        }
+
+        temp = atIndex(j, k);
+
+        while (!temp.hasClass(player.name) && temp.length !== 0) {
+            //prevent query loop
+            if (j < 0 || k < 0) break;
+
+            // capture
+            if (temp.hasClass(opponent.name)) {
+                possibleCaptures.push(temp);
+                break;
+            }
+
+            // move
+            possibleMoves.push(temp);
+
+            switch (sign) {
+                case "same":
+                    j = operation1(j, 1);
+                    k = operation1(k, 1);
+                    break;
+                case "opposite":
+                    j = operation1(j, 1);
+                    k = operation2(k, 1);
+                    break;
+            }
+
+            temp = atIndex(j, k);
+        }
+
+        // swap the two operations
+        operation1 = substraction;
+        operation2 = addition;
     }
 }
 
