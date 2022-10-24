@@ -65,11 +65,11 @@ function linearMove(direction) {
 
     for (let i = 0; i < 2; i++) {
         switch (direction) {
-            case "horizontal":
+            case "vertical":
                 j = operation(currentPiece.y, 1);
                 temp = atIndex(j, currentPiece.x);
                 break;
-            case "vertical":
+            case "horizontal":
                 j = operation(currentPiece.x, 1);
                 temp = atIndex(currentPiece.y, j);
                 break;
@@ -99,11 +99,11 @@ function linearMove(direction) {
             possibleMoves.push(temp);
 
             switch (direction) {
-                case "horizontal":
+                case "vertical":
                     j = operation(j, 1);
                     temp = atIndex(j, currentPiece.x);
                     break;
-                case "vertical":
+                case "horizontal":
                     j = operation(j, 1);
                     temp = atIndex(currentPiece.y, j);
                     break;

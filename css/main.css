@@ -10,17 +10,31 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #363636;
+  background: linear-gradient(#259fd8, #bd9150);
 }
 
 #chess-board {
+  box-shadow: 0 0 10px rgba(61, 61, 61, 0.3215686275);
+  border-radius: 20px;
   border-collapse: collapse;
 }
-#chess-board tr {
-  background-color: #512a2a;
-}
 #chess-board tr:nth-child(odd) td:nth-child(even), #chess-board tr:nth-child(even) td:nth-child(odd) {
-  background-color: #7c4c3e;
+  background-color: rgba(77, 38, 26, 0.2666666667);
+}
+#chess-board tr:nth-child(odd) td:nth-child(odd), #chess-board tr:nth-child(even) td:nth-child(even) {
+  background-color: rgba(233, 241, 241, 0.3411764706);
+}
+#chess-board tr:first-child td:first-child {
+  border-top-left-radius: 20px;
+}
+#chess-board tr:first-child td:last-child {
+  border-top-right-radius: 20px;
+}
+#chess-board tr:last-child td:first-child {
+  border-bottom-left-radius: 20px;
+}
+#chess-board tr:last-child td:last-child {
+  border-bottom-right-radius: 20px;
 }
 #chess-board td {
   height: 60px;
@@ -33,7 +47,7 @@
 
 .white,
 .black {
-  padding: 5px;
+  padding: 10px;
 }
 .white div,
 .black div {
@@ -47,23 +61,23 @@
 }
 
 .highlight {
-  background-color: #5c8e53 !important;
+  box-shadow: inset 0 0 15px #a1d4e6;
 }
 
 .highlight-1 {
-  padding: 20px;
+  padding: 22px;
   cursor: pointer;
 }
 .highlight-1 div {
   border-radius: 100%;
-  background-color: #5c8e53;
+  background-color: rgba(255, 255, 255, 0.6039215686);
 }
 .highlight-1:hover div {
   background-color: white;
 }
 
 .highlight-2 {
-  background-color: #be6069 !important;
+  box-shadow: inset 0 0 15px rgba(216, 37, 82, 0.5411764706);
 }
 
 td.black.pawn div {

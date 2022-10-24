@@ -10,19 +10,44 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #363636;
+    background: linear-gradient(#259fd8, #bd9150);
 }
 
 #chess-board {
+    box-shadow: 0 0 10px #3d3d3d52;
+    border-radius: 20px;
     border-collapse: collapse;
 
-    // create the chessboard pattern
     tr {
-        background-color: #512a2a;
-
+        // create the chessboard pattern
         &:nth-child(odd) td:nth-child(even),
         &:nth-child(even) td:nth-child(odd) {
-            background-color: #7c4c3e;
+            background-color: #4d261a44;
+        }
+
+        &:nth-child(odd) td:nth-child(odd),
+        &:nth-child(even) td:nth-child(even) {
+            background-color: #e9f1f157;
+        }
+
+        &:first-child td {
+            &:first-child {
+                border-top-left-radius: 20px;
+            }
+
+            &:last-child {
+                border-top-right-radius: 20px;
+            }
+        }
+
+        &:last-child td {
+            &:first-child {
+                border-bottom-left-radius: 20px;
+            }
+
+            &:last-child {
+                border-bottom-right-radius: 20px;
+            }
         }
     }
 
@@ -39,7 +64,7 @@
 
 .white,
 .black {
-    padding: 5px;
+    padding: 10px;
 
     div {
         background-size: contain;
@@ -53,25 +78,25 @@
 }
 
 .highlight {
-    background-color: #5c8e53 !important;
+    box-shadow: inset 0 0 15px #a1d4e6;
 }
 
 .highlight-1 {
-    padding: 20px;
+    padding: 22px;
     cursor: pointer;
 
     div {
         border-radius: 100%;
-        background-color: #5c8e53;
+        background-color: #ffffff9a;
     }
 
     &:hover div {
-        background-color: white;
+        background-color: #ffffffff;
     }
 }
 
 .highlight-2 {
-    background-color: #be6069 !important;
+    box-shadow: inset 0 0 15px #d825528a;
 }
 
 // pieces as background images
