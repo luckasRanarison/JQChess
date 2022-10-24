@@ -1,9 +1,10 @@
 class Player {
-    constructor(name, className, frontLine, operation) {
+    constructor(name, className, frontLine, operation, dangerCases) {
         this.name = name;
         this.className = className;
         this.frontLine = frontLine;
         this.operation = operation;
+        this.dangerCases = dangerCases;
         // the last two will be used for pawn moves
     }
 }
@@ -24,11 +25,12 @@ const decrement = (x, y = 1) => x - y;
 
 const atIndex = (i, j) => $(`tr:eq(${i})>td:eq(${j})`);
 
-let player1 = new Player("white", ".white", 6, decrement);
-let player2 = new Player("black", ".black", 1, increment);
+let player1 = new Player("white", ".white", 6, decrement, []);
+let player2 = new Player("black", ".black", 1, increment, []);
 let player, opponent;
 let currentPiece;
 let possibleMoves, possibleCaptures; // will be used for detecting threats later on
+let threat = false;
 
 // game initialisation
 function initialisation() {

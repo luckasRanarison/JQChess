@@ -1,10 +1,10 @@
-function movePawn() {
+function movePawn(target) {
     // moves
-    currentPiece.y === player.frontLine ? (max = 2) : (max = 1);
+    target.y === player.frontLine ? (max = 2) : (max = 1);
 
     // pawn move differently for the two players, that's why each player have his own method
     for (let i = 1; i <= max; i++) {
-        let temp = atIndex(player.operation(currentPiece.y, i), currentPiece.x);
+        let temp = atIndex(player.operation(target.y, i), target.x);
 
         if (temp.hasClass("white") || temp.hasClass("black")) {
             break;
@@ -13,14 +13,8 @@ function movePawn() {
     }
 
     // capture
-    let capture1 = atIndex(
-        player.operation(currentPiece.y),
-        currentPiece.x + 1
-    );
-    let capture2 = atIndex(
-        player.operation(currentPiece.y),
-        currentPiece.x - 1
-    );
+    let capture1 = atIndex(player.operation(target.y), target.x + 1);
+    let capture2 = atIndex(player.operation(target.y), target.x - 1);
 
     let captures = [capture1, capture2];
 
@@ -31,15 +25,15 @@ function movePawn() {
     }
 }
 
-function moveRook() {
-    linearMove("horizontal");
-    linearMove("vertical");
+function moveRook(target) {
+    linearMove(target, "horizontal");
+    linearMove(target, "vertical");
 }
 
-function moveKnight() {
+function moveKnight(target) {
     // used antiLoop() to preventn multiple negative values
-    let x = currentPiece.x;
-    let y = currentPiece.y;
+    let x = target.x;
+    let y = target.y;
 
     // figured all cases instead of doing a loop (see previous commits)
     temp = [
@@ -68,22 +62,22 @@ function moveKnight() {
     }
 }
 
-function moveBishop() {
-    linearMove("diagonal1");
-    linearMove("diagonal2");
+function moveBishop(target) {
+    linearMove(target, "diagonal1");
+    linearMove(target, "diagonal2");
 }
 
-function moveQueen() {
-    linearMove("horizontal");
-    linearMove("vertical");
-    linearMove("diagonal1");
-    linearMove("diagonal2");
+function moveQueen(target) {
+    linearMove(target, "horizontal");
+    linearMove(target, "vertical");
+    linearMove(target, "diagonal1");
+    linearMove(target, "diagonal2");
 }
 
-function moveKing() {
+function moveKing(target) {
     let temp = [];
-    let x = currentPiece.x;
-    let y = currentPiece.y;
+    let x = target.x;
+    let y = target.y;
     let operation = increment;
 
     // loop twice to get all 8 possible moves
@@ -107,12 +101,21 @@ function moveKing() {
 
         // move
         if (!t.hasClass(player.name) && t.length !== 0) {
-            possibleMoves.push(t);
+            for (const danger of player.dangerCases) {
+                if (danger.index("td") === t.index("td")) {
+                    threat = true;
+                    break;
+                } else {
+                    threat = false;
+                }
+            }
+
+            if (!threat) possibleMoves.push(t);
         }
     }
 }
 
-function linearMove(direction) {
+function linearMove(target, direction) {
     //initialisation
     let operation = increment;
     let operationMirror = decrement;
@@ -120,21 +123,21 @@ function linearMove(direction) {
     for (let i = 0; i < 2; i++) {
         switch (direction) {
             case "vertical":
-                y = check(operation(currentPiece.y));
-                temp = atIndex(y, currentPiece.x);
+                y = check(operation(target.y));
+                temp = atIndex(y, target.x);
                 break;
             case "horizontal":
-                y = check(operation(currentPiece.x));
-                temp = atIndex(currentPiece.y, y);
+                y = check(operation(target.x));
+                temp = atIndex(target.y, y);
                 break;
             case "diagonal1":
-                y = check(operation(currentPiece.y));
-                x = check(operation(currentPiece.x));
+                y = check(operation(target.y));
+                x = check(operation(target.x));
                 temp = atIndex(y, x);
                 break;
             case "diagonal2":
-                y = check(operation(currentPiece.y));
-                x = check(operationMirror(currentPiece.x));
+                y = check(operation(target.y));
+                x = check(operationMirror(target.x));
                 temp = atIndex(y, x);
                 break;
         }
@@ -153,10 +156,10 @@ function linearMove(direction) {
 
             switch (direction) {
                 case "vertical":
-                    temp = atIndex(y, currentPiece.x);
+                    temp = atIndex(y, target.x);
                     break;
                 case "horizontal":
-                    temp = atIndex(currentPiece.y, y);
+                    temp = atIndex(target.y, y);
                     break;
                 case "diagonal1":
                     x = check(operation(x));

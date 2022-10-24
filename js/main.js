@@ -1,5 +1,23 @@
 $(document).ready(initialisation);
 
+// get props of a target
+function getProps(target) {
+    let piece = new Piece();
+    piece.element = $(target);
+    piece.classList = target.classList;
+    piece.x = piece.element.index();
+    piece.y = piece.element.parent().index("tr");
+
+    for (const type in MOVES) {
+        if ($(target).hasClass(type)) {
+            piece.type = type;
+            break;
+        }
+    }
+
+    return piece;
+}
+
 // click event, this is the entry point of the game
 function selection() {
     // disable current highlighting when selecting other pieces
@@ -10,18 +28,10 @@ function selection() {
     }
 
     // set current props (piece, class, coords, type)
-    currentPiece.element = $(this);
-    currentPiece.classList = this.classList;
-    currentPiece.x = currentPiece.element.index();
-    currentPiece.y = currentPiece.element.parent().index("tr");
+    currentPiece = getProps(this);
 
-    for (const type in MOVES) {
-        if ($(this).hasClass(type)) {
-            currentPiece.type = type;
-            MOVES[type]();
-            break;
-        }
-    } // call the function relative to the piece type (see moves.js)
+    // call the function relative to the piece type (see moves.js)
+    MOVES[currentPiece.type](currentPiece);
 
     // highlight current selection
     currentPiece.element.addClass("highlight");
@@ -43,7 +53,7 @@ function move() {
     $(this).removeClass();
     $(this).addClass(currentPiece.classList.value);
 
-    currentPiece.element.removeClass();
+    currentPiece.element.removeAttr("class");
     currentPiece.element.off();
 
     disableMoves();
@@ -66,12 +76,34 @@ function disableMoves() {
     possibleCaptures = [];
 }
 
-function threat() {
-    // todo
+function threatCheck() {
+    let playerPieces = $(player.className);
+
+    playerPieces.each(function () {
+        let tempPiece = getProps(this);
+
+        if (tempPiece.type === "pawn") {
+            let case1 = atIndex(player.operation(tempPiece.y), tempPiece.x + 1);
+            let case2 = atIndex(player.operation(tempPiece.y), tempPiece.x - 1);
+
+            opponent.dangerCases.push(case1, case2);
+        } else {
+            MOVES[tempPiece.type](tempPiece);
+
+            opponent.dangerCases = opponent.dangerCases.concat(possibleMoves);
+            opponent.dangerCases =
+                opponent.dangerCases.concat(possibleCaptures);
+        }
+
+        possibleMoves = [];
+        possibleCaptures = [];
+    });
 }
 
 // swap turn
 function alternate() {
+    threatCheck();
+
     let temp = player;
     player = opponent;
     opponent = temp;
