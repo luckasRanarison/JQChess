@@ -77,7 +77,8 @@
 }
 
 .highlight-2 {
-  box-shadow: inset 0 0 15px rgba(216, 37, 82, 0.5411764706);
+  box-shadow: inset 0 0 15px rgba(236, 7, 64, 0.7137254902);
+  background-color: rgba(216, 37, 82, 0.7450980392) !important;
 }
 
 td.black.pawn div {
