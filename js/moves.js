@@ -38,8 +38,8 @@ function moveRook() {
 
 function moveKnight() {
     // used antiLoop() to preventn multiple negative values
-    let x = check(currentPiece.x);
-    let y = check(currentPiece.y);
+    let x = currentPiece.x;
+    let y = currentPiece.y;
 
     // figured all cases instead of doing a loop (see previous commits)
     temp = [
@@ -81,8 +81,35 @@ function moveQueen() {
 }
 
 function moveKing() {
-    console.log("king");
-    // todo
+    let temp = [];
+    let x = currentPiece.x;
+    let y = currentPiece.y;
+    let operation = increment;
+
+    // loop twice to get all 8 possible moves
+    for (let i = 0; i < 2; i++) {
+        temp.push(
+            atIndex(check(operation(y)), check(x - 1)),
+            atIndex(check(operation(y)), check(x)),
+            atIndex(check(operation(y)), check(x + 1)),
+            atIndex(check(y), check(operation(x)))
+        );
+
+        operation = decrement;
+    }
+
+    for (const t of temp) {
+        // capture
+        if (t.hasClass(opponent.name)) {
+            possibleCaptures.push(t);
+            continue;
+        }
+
+        // move
+        if (!t.hasClass(player.name) && t.length !== 0) {
+            possibleMoves.push(t);
+        }
+    }
 }
 
 function linearMove(direction) {
