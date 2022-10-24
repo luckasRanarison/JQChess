@@ -38,21 +38,19 @@ function moveRook() {
 
 function moveKnight() {
     // used antiLoop() to preventn multiple negative values
-    let j = antiLoop(currentPiece.x + 2);
-    let k = antiLoop(currentPiece.x - 2);
-    let l = antiLoop(currentPiece.y + 1);
-    let m = antiLoop(currentPiece.y - 1);
+    let x = check(currentPiece.x);
+    let y = check(currentPiece.y);
 
-    // figured all cases instead of doing a loop
+    // figured all cases instead of doing a loop (see previous commits)
     temp = [
-        atIndex(l, j),
-        atIndex(m, j),
-        atIndex(l, k),
-        atIndex(m, k),
-        atIndex(l + 1, k + 1),
-        atIndex(l + 1, j - 1),
-        atIndex(m - 1, k + 1),
-        atIndex(m - 1, j - 1),
+        atIndex(check(y - 2), check(x + 1)),
+        atIndex(check(y - 2), check(x - 1)),
+        atIndex(check(y + 2), check(x + 1)),
+        atIndex(check(y + 2), check(x - 1)),
+        atIndex(check(y - 1), check(x + 2)),
+        atIndex(check(y + 1), check(x + 2)),
+        atIndex(check(y - 1), check(x - 2)),
+        atIndex(check(y + 1), check(x - 2)),
     ];
 
     for (const t of temp) {
@@ -95,22 +93,22 @@ function linearMove(direction) {
     for (let i = 0; i < 2; i++) {
         switch (direction) {
             case "vertical":
-                j = antiLoop(operation(currentPiece.y));
-                temp = atIndex(j, currentPiece.x);
+                y = check(operation(currentPiece.y));
+                temp = atIndex(y, currentPiece.x);
                 break;
             case "horizontal":
-                j = antiLoop(operation(currentPiece.x));
-                temp = atIndex(currentPiece.y, j);
+                y = check(operation(currentPiece.x));
+                temp = atIndex(currentPiece.y, y);
                 break;
             case "diagonal1":
-                j = antiLoop(operation(currentPiece.y));
-                k = antiLoop(operation(currentPiece.x));
-                temp = atIndex(j, k);
+                y = check(operation(currentPiece.y));
+                x = check(operation(currentPiece.x));
+                temp = atIndex(y, x);
                 break;
             case "diagonal2":
-                j = antiLoop(operation(currentPiece.y));
-                k = antiLoop(operationMirror(currentPiece.x));
-                temp = atIndex(j, k);
+                y = check(operation(currentPiece.y));
+                x = check(operationMirror(currentPiece.x));
+                temp = atIndex(y, x);
                 break;
         }
 
@@ -124,24 +122,22 @@ function linearMove(direction) {
             // move
             possibleMoves.push(temp);
 
+            y = check(operation(y));
+
             switch (direction) {
                 case "vertical":
-                    j = antiLoop(operation(j));
-                    temp = atIndex(j, currentPiece.x);
+                    temp = atIndex(y, currentPiece.x);
                     break;
                 case "horizontal":
-                    j = antiLoop(operation(j));
-                    temp = atIndex(currentPiece.y, j);
+                    temp = atIndex(currentPiece.y, y);
                     break;
                 case "diagonal1":
-                    j = antiLoop(operation(j));
-                    k = antiLoop(operation(k));
-                    temp = atIndex(j, k);
+                    x = check(operation(x));
+                    temp = atIndex(y, x);
                     break;
                 case "diagonal2":
-                    j = antiLoop(operation(j));
-                    k = antiLoop(operationMirror(k));
-                    temp = atIndex(j, k);
+                    x = check(operationMirror(x));
+                    temp = atIndex(y, x);
                     break;
             }
         }
@@ -151,7 +147,7 @@ function linearMove(direction) {
     }
 }
 
-function antiLoop(n) {
+function check(n) {
     // prevent negative numbers
     if (n < 0) {
         return undefined;
