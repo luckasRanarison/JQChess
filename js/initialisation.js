@@ -19,13 +19,13 @@ class Piece {
 }
 
 // globals
-const addition = (x, y) => x + y;
-const substraction = (x, y) => x - y;
+const increment = (x, y = 1) => x + y;
+const decrement = (x, y = 1) => x - y;
 
 const atIndex = (i, j) => $(`tr:eq(${i})>td:eq(${j})`);
 
-let player1 = new Player("white", ".white", 6, substraction);
-let player2 = new Player("black", ".black", 1, addition);
+let player1 = new Player("white", ".white", 6, decrement);
+let player2 = new Player("black", ".black", 1, increment);
 let player, opponent;
 let currentPiece;
 let possibleMoves, possibleCaptures; // will be used for detecting threats later on
