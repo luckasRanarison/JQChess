@@ -1,11 +1,13 @@
 class Player {
-    constructor(name, className, frontLine, operation, dangerCases) {
+    constructor(name, className, frontLine, operation) {
         this.name = name;
         this.className = className;
-        this.frontLine = frontLine;
+        this.frontLine = frontLine; // for pawn moves
         this.operation = operation;
-        this.dangerCases = dangerCases;
-        // the last two will be used for pawn moves
+        this.possibleSelections = $(className);
+        this.threat = false;
+        this.dangerCases = [];
+        this.assaillant = [];
     }
 }
 
@@ -16,6 +18,7 @@ class Piece {
         this.type = type;
         this.x = x;
         this.y = y;
+        this.mobility = true;
     }
 }
 
@@ -25,23 +28,12 @@ const decrement = (x, y = 1) => x - y;
 
 const atIndex = (i, j) => $(`tr:eq(${i})>td:eq(${j})`);
 
-let player1 = new Player("white", ".white", 6, decrement, []);
-let player2 = new Player("black", ".black", 1, increment, []);
 let player, opponent;
 let currentPiece;
 let possibleMoves, possibleCaptures; // will be used for detecting threats later on
-let threat = false;
 
 // game initialisation
 function initialisation() {
-    // variables initialisation
-    player = player1;
-    opponent = player2;
-
-    currentPiece = new Piece();
-    possibleMoves = [];
-    possibleCaptures = [];
-
     // create the board
     for (let i = 0; i < 8; i++) {
         let tr = document.createElement("tr");
@@ -83,6 +75,15 @@ function initialisation() {
 
     $("td:eq(4), td:eq(60)").addClass("queen");
 
+    // variables initialisation
+    player = new Player("white", ".white", 6, decrement);
+    opponent = new Player("black", ".black", 1, increment);
+
+    currentPiece = new Piece();
+
+    possibleMoves = [];
+    possibleCaptures = [];
+
     // add click event to current player pieces
-    $(player.className).on("click", selection);
+    player.possibleSelections.on("click", selection);
 }

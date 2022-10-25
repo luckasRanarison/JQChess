@@ -2,20 +2,27 @@ $(document).ready(initialisation);
 
 // get props of a target
 function getProps(target) {
-    let piece = new Piece();
-    piece.element = $(target);
-    piece.classList = target.classList;
-    piece.x = piece.element.index();
-    piece.y = piece.element.parent().index("tr");
+    let element = $(target);
+    let classList = target.classList;
+    let x = element.index();
+    let y = element.parent().index("tr");
 
-    for (const type in MOVES) {
-        if ($(target).hasClass(type)) {
-            piece.type = type;
+    for (const moveType in MOVES) {
+        if ($(target).hasClass(moveType)) {
+            type = moveType;
             break;
         }
     }
 
-    return piece;
+    return new Piece(element, classList, type, x, y);
+}
+
+function compare(target1, target2) {
+    if (target1.x === target2.x && target1.x === target2.y) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // click event, this is the entry point of the game
@@ -30,11 +37,14 @@ function selection() {
     // set current props (piece, class, coords, type)
     currentPiece = getProps(this);
 
-    // call the function relative to the piece type (see moves.js)
-    MOVES[currentPiece.type](currentPiece);
-
     // highlight current selection
     currentPiece.element.addClass("highlight");
+
+    // test if the piece can move (not protecting the king)
+    threatCheck("preCheck");
+
+    // call the function relative to the piece type (see moves.js)
+    if (currentPiece.mobility) MOVES[currentPiece.type](currentPiece);
 
     // highlight possible moves and captures
     for (const mv of possibleMoves) {
@@ -72,14 +82,23 @@ function disableMoves() {
         capt.off();
     }
 
+    $(".highlight-2").removeClass("highlight-2");
+
     possibleMoves = [];
     possibleCaptures = [];
 }
 
-function threatCheck() {
-    let playerPieces = $(player.className);
+function threatCheck(mode) {
+    player.dangerCases = [];
+    // swap two players temporarily to simulate attacks
+    [player, opponent] = [opponent, player];
 
-    playerPieces.each(function () {
+    let classes = currentPiece.classList.value;
+    let opponentPieces = $(player.className);
+
+    currentPiece.element.removeClass();
+
+    opponentPieces.each(function () {
         let tempPiece = getProps(this);
 
         if (tempPiece.type === "pawn") {
@@ -98,20 +117,41 @@ function threatCheck() {
         possibleMoves = [];
         possibleCaptures = [];
     });
+
+    currentPiece.element.addClass(classes);
+
+    [player, opponent] = [opponent, player];
+
+    for (const danger of player.dangerCases) {
+        if (danger.hasClass("king")) {
+            switch (mode) {
+                case "preCheck":
+                    currentPiece.mobility = false;
+                    break;
+
+                case "postCheck":
+                    danger.addClass("highlight-2");
+                    break;
+            }
+            break;
+        }
+    }
+
+    // for (const danger of player.dangerCases) {
+    //     danger.addClass("highlight-2");
+    // }
 }
 
 // swap turn
 function alternate() {
-    threatCheck();
-
-    let temp = player;
-    player = opponent;
-    opponent = temp;
+    [player, opponent] = [opponent, player];
 
     $(player.className).on("click", selection);
     $(opponent.className).off();
 
     console.log(`It's ${player.name}'s turn`);
+
+    threatCheck("postCheck");
 }
 
 function victoryChechk() {

@@ -31,21 +31,23 @@ function moveRook(target) {
 }
 
 function moveKnight(target) {
-    // used antiLoop() to preventn multiple negative values
+    let temp = [];
     let x = target.x;
     let y = target.y;
+    let operation = increment;
 
-    // figured all cases instead of doing a loop (see previous commits)
-    temp = [
-        atIndex(check(y - 2), check(x + 1)),
-        atIndex(check(y - 2), check(x - 1)),
-        atIndex(check(y + 2), check(x + 1)),
-        atIndex(check(y + 2), check(x - 1)),
-        atIndex(check(y - 1), check(x + 2)),
-        atIndex(check(y + 1), check(x + 2)),
-        atIndex(check(y - 1), check(x - 2)),
-        atIndex(check(y + 1), check(x - 2)),
-    ];
+    // used check() to preventn multiple negative values
+    // loop twice to get all 8 possible moves
+    for (let i = 0; i < 2; i++) {
+        temp.push(
+            atIndex(check(operation(y, 2)), check(x + 1)),
+            atIndex(check(operation(y, 2)), check(x - 1)),
+            atIndex(check(y - 1), check(operation(x, 2))),
+            atIndex(check(y + 1), check(operation(x, 2)))
+        );
+
+        operation = decrement;
+    }
 
     for (const t of temp) {
         // capture
@@ -101,22 +103,14 @@ function moveKing(target) {
 
         // move
         if (!t.hasClass(player.name) && t.length !== 0) {
-            for (const danger of player.dangerCases) {
-                if (danger.index("td") === t.index("td")) {
-                    threat = true;
-                    break;
-                } else {
-                    threat = false;
-                }
-            }
-
-            if (!threat) possibleMoves.push(t);
+            possibleMoves.push(t);
         }
     }
 }
 
 function linearMove(target, direction) {
     //initialisation
+    let temp = [];
     let operation = increment;
     let operationMirror = decrement;
 
@@ -172,8 +166,7 @@ function linearMove(target, direction) {
             }
         }
 
-        operation = decrement;
-        operationMirror = increment;
+        [operation, operationMirror] = [decrement, increment];
     }
 }
 

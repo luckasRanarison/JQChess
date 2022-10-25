@@ -61,7 +61,12 @@
 }
 
 .highlight {
-  box-shadow: inset 0 0 15px #ffffff;
+  box-shadow: inset 0 0 15px #ffffff !important;
+  background-color: rgba(233, 241, 241, 0.3960784314) !important;
+}
+
+.highlight.highlight-2 {
+  background-color: rgba(233, 241, 241, 0.3960784314) !important;
 }
 
 .highlight-1 {
