@@ -17,14 +17,6 @@ function getProps(target) {
     return new Piece(element, classList, type, x, y);
 }
 
-function compare(target1, target2) {
-    if (target1.x === target2.x && target1.x === target2.y) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 // click event, this is the entry point of the game
 function selection() {
     // disable current highlighting when selecting other pieces
@@ -41,7 +33,7 @@ function selection() {
     currentPiece.element.addClass("highlight");
 
     // test if the piece can move (not protecting the king)
-    threatCheck("preCheck");
+    threatCheck();
 
     // call the function relative to the piece type (see moves.js)
     if (currentPiece.mobility) MOVES[currentPiece.type](currentPiece);
@@ -73,7 +65,7 @@ function move() {
 // disable event listeners for previous possible moves
 function disableMoves() {
     for (const mv of possibleMoves) {
-        mv.removeClass("highlight highlight-1");
+        mv.removeClass("highlight highlight-1 highlight-2");
         mv.off();
     }
 
@@ -81,8 +73,6 @@ function disableMoves() {
         capt.removeClass("highlight highlight-2");
         capt.off();
     }
-
-    $(".highlight-2").removeClass("highlight-2");
 
     possibleMoves = [];
     possibleCaptures = [];
@@ -109,6 +99,14 @@ function threatCheck(mode) {
         } else {
             MOVES[tempPiece.type](tempPiece);
 
+            // for (const capt of possibleCaptures) {
+            //     if (capt.hasClass("king") && mode === "postCheck") {
+            //         player.assaillant.push(tempPiece);
+            //         console.log(player.assaillant);
+            //         break;
+            //     }
+            // }
+
             opponent.dangerCases = opponent.dangerCases.concat(possibleMoves);
             opponent.dangerCases =
                 opponent.dangerCases.concat(possibleCaptures);
@@ -123,19 +121,22 @@ function threatCheck(mode) {
     [player, opponent] = [opponent, player];
 
     for (const danger of player.dangerCases) {
-        if (danger.hasClass("king")) {
-            switch (mode) {
-                case "preCheck":
-                    currentPiece.mobility = false;
-                    break;
+        if (danger.hasClass("king") && mode === "postCheck") {
+            console.log("ok");
+            danger.addClass("highlight-2");
+        }
 
-                case "postCheck":
-                    danger.addClass("highlight-2");
-                    break;
-            }
+        if (
+            danger.hasClass(`${player.name} king`) &&
+            currentPiece.type !== "king"
+        ) {
+            // immobize pieces defending the king
+            currentPiece.mobility = false;
             break;
         }
     }
+
+    // for debug purposes
 
     // for (const danger of player.dangerCases) {
     //     danger.addClass("highlight-2");

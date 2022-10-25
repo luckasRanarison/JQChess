@@ -36,10 +36,10 @@ function moveKnight(target) {
     let y = target.y;
     let operation = increment;
 
-    // used check() to preventn multiple negative values
     // loop twice to get all 8 possible moves
     for (let i = 0; i < 2; i++) {
         temp.push(
+            // used check() to preventn multiple negative values
             atIndex(check(operation(y, 2)), check(x + 1)),
             atIndex(check(operation(y, 2)), check(x - 1)),
             atIndex(check(y - 1), check(operation(x, 2))),
@@ -80,6 +80,7 @@ function moveKing(target) {
     let temp = [];
     let x = target.x;
     let y = target.y;
+    let invalidMove = false;
     let operation = increment;
 
     // loop twice to get all 8 possible moves
@@ -103,7 +104,17 @@ function moveKing(target) {
 
         // move
         if (!t.hasClass(player.name) && t.length !== 0) {
-            possibleMoves.push(t);
+            // array.includes didn't work so this is a workaround
+            for (const danger of player.dangerCases) {
+                if (danger.index("td") === t.index("td")) {
+                    invalidMove = true;
+                    break;
+                } else {
+                    invalidMove = false;
+                }
+            }
+
+            if (!invalidMove) possibleMoves.push(t);
         }
     }
 }
