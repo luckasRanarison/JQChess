@@ -78,6 +78,7 @@ function disableMoves() {
 }
 
 function threatCheck() {
+    let threat = false;
     player.dangerCases = [];
     player.assailant = [];
 
@@ -100,7 +101,10 @@ function threatCheck() {
             for (const capt of tempPiece.possibleCaptures) {
                 if (capt.hasClass("king")) {
                     opponent.assailant.push(tempPiece);
+                    threat = true;
                     break;
+                } else {
+                    threat = false;
                 }
             }
 
@@ -122,6 +126,8 @@ function threatCheck() {
     // for (const danger of player.dangerCases) {
     //     danger.addClass("highlight-2");
     // }
+
+    return threat;
 }
 
 function actionCheck(target) {
@@ -141,14 +147,40 @@ function actionCheck(target) {
             if (player.getAssailant() === 1) {
                 // verify if the piece can protect the king
                 let protect = false;
+                let temp = [];
+                let blockMoves = [];
 
                 let assailant = player.assailant[0];
 
-                // MOVES[assailant.type](assailant);
-
+                MOVES[assailant.type](assailant);
                 MOVES[target.type](target);
 
-                // to do
+                for (const mv of target.possibleMoves) {
+                    for (const path of assailant.possibleMoves) {
+                        if (mv.index("td") === path.index("td")) {
+                            temp.push(mv);
+                        }
+                    }
+                }
+
+                for (const move of temp) {
+                    // simulate the move
+                    target.element.removeClass();
+                    move.addClass(player.name);
+
+                    let threat = threatCheck();
+
+                    // replace the piece
+                    target.element.addClass(classes);
+                    move.removeClass(player.name);
+
+                    if (!threat) blockMoves.push(move);
+                }
+
+                if (blockMoves.length > 0) {
+                    protect = true;
+                    target.possibleMoves = blockMoves;
+                }
 
                 // verify if the selected piece can capture the assailant
                 let capture = target.possibleCaptures.some(
