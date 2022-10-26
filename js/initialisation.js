@@ -26,7 +26,8 @@ class Piece {
         this.type = type;
         this.x = x;
         this.y = y;
-        this.mobility = true;
+        this.normalMoves = true;
+        this.specialActions = false;
         this.possibleMoves = [];
         this.possibleCaptures = [];
     }

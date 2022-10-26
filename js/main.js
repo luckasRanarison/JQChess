@@ -36,7 +36,7 @@ function selection() {
     actionCheck(currentPiece);
 
     // call the function relative to the piece type (see moves.js)
-    if (currentPiece.mobility) MOVES[currentPiece.type](currentPiece);
+    if (currentPiece.normalMoves) MOVES[currentPiece.type](currentPiece);
 
     // highlight possible moves and captures
     for (const mv of currentPiece.possibleMoves) {
@@ -96,7 +96,9 @@ function threatCheck() {
 
             opponent.dangerCases.push(case1, case2);
         } else {
-            MOVES[tempPiece.type](tempPiece);
+            tempPiece.type === "king"
+                ? MOVES["king"](tempPiece, false)
+                : MOVES[tempPiece.type](tempPiece);
 
             for (const capt of tempPiece.possibleCaptures) {
                 if (capt.hasClass("king")) {
@@ -170,11 +172,19 @@ function actionCheck(target) {
 
                     let threat = threatCheck();
 
+                    // debug
+                    //
+                    // for (const danger of player.dangerCases) {
+                    // danger.addClass("highlight-2");
+                    // }
+
                     // replace the piece
                     target.element.addClass(classes);
                     move.removeClass(player.name);
 
-                    if (!threat) blockMoves.push(move);
+                    if (!threat) {
+                        blockMoves.push(move);
+                    }
                 }
 
                 if (blockMoves.length > 0) {
@@ -190,11 +200,15 @@ function actionCheck(target) {
                 if (!protect) target.possibleMoves = [];
                 if (!capture) target.possibleCaptures = [];
 
+                if (protect || capture) target.specialActions = true;
+
+                console.log(target.specialActions);
+
                 console.log(`protect: ${protect}, capture: ${capture}`);
             }
 
             // immobize pieces defending the king if they can't do other actions
-            target.mobility = false;
+            target.normalMoves = false;
             break;
         }
     }
@@ -213,16 +227,12 @@ function alternate() {
 
     console.log(`It's ${player.name}'s turn`);
 
-    // remove unexpected highlights
+    // remove king highlighting
     $(".highlight-2").removeClass("highlight-2");
 
-    threatCheck();
+    player.threat = threatCheck();
 
-    for (const danger of player.dangerCases) {
-        if (danger.hasClass("king")) {
-            danger.addClass("highlight-2");
-        }
-    }
+    if (player.threat) $(`${player.className}.king`).addClass("highlight-2");
 }
 
 function victoryChechk() {

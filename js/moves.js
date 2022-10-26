@@ -79,11 +79,10 @@ function moveQueen(target) {
     linearMove(target, "diagonal2");
 }
 
-function moveKing(target) {
+function moveKing(target, danger = true) {
     let temp = [];
     let x = target.x;
     let y = target.y;
-    let invalidMove = false;
     let operation = increment;
 
     // loop twice to get all 8 possible moves
@@ -99,21 +98,44 @@ function moveKing(target) {
     }
 
     for (const t of temp) {
+        let invalidMove = false;
+
         // capture
         if (t.hasClass(opponent.name)) {
-            target.possibleCaptures.push(t);
+            let pieceClass = t[0].classList.value;
+
+            // simulate the move
+            t.removeClass();
+
+            threatCheck();
+
+            for (const danger of player.dangerCases) {
+                if (danger.index("td") === t.index("td")) {
+                    invalidMove = true;
+                    break;
+                }
+            }
+
+            // replace the piece
+            t.addClass(pieceClass);
+
+            // recheck
+            threatCheck();
+
+            if (!invalidMove) target.possibleCaptures.push(t);
             continue;
         }
 
         // move
         if (!t.hasClass(player.name) && t.length !== 0) {
             // array.includes didn't work so this is a workaround
-            for (const danger of player.dangerCases) {
-                if (danger.index("td") === t.index("td")) {
-                    invalidMove = true;
-                    break;
-                } else {
-                    invalidMove = false;
+
+            if (danger) {
+                for (const danger of player.dangerCases) {
+                    if (danger.index("td") === t.index("td")) {
+                        invalidMove = true;
+                        break;
+                    }
                 }
             }
 
