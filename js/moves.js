@@ -9,18 +9,18 @@ function movePawn(target) {
         if (temp.hasClass("white") || temp.hasClass("black")) {
             break;
         }
-        possibleMoves.push(temp);
+        target.possibleMoves.push(temp);
     }
 
     // capture
-    let capture1 = atIndex(player.operation(target.y), target.x + 1);
-    let capture2 = atIndex(player.operation(target.y), target.x - 1);
+    let capture1 = atIndex(player.operation(target.y), check(target.x + 1));
+    let capture2 = atIndex(player.operation(target.y), check(target.x - 1));
 
     let captures = [capture1, capture2];
 
     for (const capt of captures) {
         if (capt.hasClass(opponent.name)) {
-            possibleCaptures.push(capt);
+            target.possibleCaptures.push(capt);
         }
     }
 }
@@ -51,15 +51,18 @@ function moveKnight(target) {
 
     for (const t of temp) {
         // capture
-        if (t.hasClass(opponent.name) && !possibleCaptures.includes(t)) {
-            possibleCaptures.push(t);
+        if (t.hasClass(opponent.name) && !target.possibleCaptures.includes(t)) {
+            target.possibleCaptures.push(t);
         }
 
         // move
         if (!t.hasClass(player.name) && t.length !== 0) {
-            if (!possibleMoves.includes(t) && !possibleCaptures.includes(t))
+            if (
+                !target.possibleMoves.includes(t) &&
+                !target.possibleCaptures.includes(t)
+            )
                 // to avoid duplication
-                possibleMoves.push(t);
+                target.possibleMoves.push(t);
         }
     }
 }
@@ -98,7 +101,7 @@ function moveKing(target) {
     for (const t of temp) {
         // capture
         if (t.hasClass(opponent.name)) {
-            possibleCaptures.push(t);
+            target.possibleCaptures.push(t);
             continue;
         }
 
@@ -114,7 +117,7 @@ function moveKing(target) {
                 }
             }
 
-            if (!invalidMove) possibleMoves.push(t);
+            if (!invalidMove) target.possibleMoves.push(t);
         }
     }
 }
@@ -150,12 +153,12 @@ function linearMove(target, direction) {
         while (!temp.hasClass(player.name) && temp.length !== 0) {
             // capture
             if (temp.hasClass(opponent.name)) {
-                possibleCaptures.push(temp);
+                target.possibleCaptures.push(temp);
                 break;
             }
 
             // move
-            possibleMoves.push(temp);
+            target.possibleMoves.push(temp);
 
             y = check(operation(y));
 
@@ -182,7 +185,7 @@ function linearMove(target, direction) {
 }
 
 function check(n) {
-    // prevent negative numbers
+    // prevent negative numbers and query loop
     if (n < 0) {
         return undefined;
     } else return n;

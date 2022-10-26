@@ -7,7 +7,15 @@ class Player {
         this.possibleSelections = $(className);
         this.threat = false;
         this.dangerCases = [];
-        this.assaillant = [];
+        this.assailant = [];
+    }
+
+    getDangerCases() {
+        return this.dangerCases.length;
+    }
+
+    getAssailant() {
+        return this.assailant.length;
     }
 }
 
@@ -19,6 +27,13 @@ class Piece {
         this.x = x;
         this.y = y;
         this.mobility = true;
+        this.possibleMoves = [];
+        this.possibleCaptures = [];
+    }
+
+    clearMoves() {
+        this.possibleMoves = [];
+        this.possibleCaptures = [];
     }
 }
 
@@ -30,7 +45,6 @@ const atIndex = (i, j) => $(`tr:eq(${i})>td:eq(${j})`);
 
 let player, opponent;
 let currentPiece;
-let possibleMoves, possibleCaptures; // will be used for detecting threats later on
 
 // game initialisation
 function initialisation() {
@@ -80,9 +94,6 @@ function initialisation() {
     opponent = new Player("black", ".black", 1, increment);
 
     currentPiece = new Piece();
-
-    possibleMoves = [];
-    possibleCaptures = [];
 
     // add click event to current player pieces
     player.possibleSelections.on("click", selection);

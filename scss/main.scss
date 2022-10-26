@@ -70,6 +70,7 @@
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
+        animation: appear 0.5s;
 
         &:hover {
             cursor: pointer;
@@ -90,19 +91,41 @@
     padding: 22px;
     cursor: pointer;
 
-    div {
-        border-radius: 100%;
-        background-color: #ffffff9a;
+    &:hover div {
+        transition: 0.2s;
+        transform: scale(1.3);
+        background-color: #ffffffff;
     }
 
-    &:hover div {
-        background-color: #ffffffff;
+    div {
+        animation: pop 0.25s;
+        border-radius: 100%;
+        background-color: #ffffff9a;
     }
 }
 
 .highlight-2 {
+    transition: 0.3s;
     box-shadow: inset 0 0 15px #ec0740b6;
     background-color: #d82552be !important;
+}
+
+@keyframes pop {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 // pieces as background images

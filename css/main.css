@@ -54,6 +54,8 @@
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  -webkit-animation: appear 0.5s;
+          animation: appear 0.5s;
 }
 .white div:hover,
 .black div:hover {
@@ -73,19 +75,57 @@
   padding: 22px;
   cursor: pointer;
 }
+.highlight-1:hover div {
+  transition: 0.2s;
+  transform: scale(1.3);
+  background-color: white;
+}
 .highlight-1 div {
+  -webkit-animation: pop 0.25s;
+          animation: pop 0.25s;
   border-radius: 100%;
   background-color: rgba(255, 255, 255, 0.6039215686);
 }
-.highlight-1:hover div {
-  background-color: white;
-}
 
 .highlight-2 {
+  transition: 0.3s;
   box-shadow: inset 0 0 15px rgba(236, 7, 64, 0.7137254902);
   background-color: rgba(216, 37, 82, 0.7450980392) !important;
 }
 
+@-webkit-keyframes pop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@-webkit-keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 td.black.pawn div {
   background-image: url("../assets/b_pawn.png ");
 }
