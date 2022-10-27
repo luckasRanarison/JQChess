@@ -4,18 +4,9 @@ class Player {
         this.className = className;
         this.frontLine = frontLine; // for pawn moves
         this.operation = operation;
-        this.possibleSelections = $(className);
-        this.threat = false;
+        this.checkmate = false;
+        this.assailant = undefined;
         this.dangerCases = [];
-        this.assailant = [];
-    }
-
-    getDangerCases() {
-        return this.dangerCases.length;
-    }
-
-    getAssailant() {
-        return this.assailant.length;
     }
 }
 
@@ -35,6 +26,15 @@ class Piece {
     clearMoves() {
         this.possibleMoves = [];
         this.possibleCaptures = [];
+    }
+
+    checkMoves() {
+        if (
+            this.possibleCaptures.length === 0 &&
+            this.possibleMoves.length === 0
+        ) {
+            return false;
+        }
     }
 }
 
@@ -97,5 +97,5 @@ function initialisation() {
     currentPiece = new Piece();
 
     // add click event to current player pieces
-    player.possibleSelections.on("click", selection);
+    $(player.className).on("click", selection);
 }
