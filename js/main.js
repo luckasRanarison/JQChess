@@ -105,8 +105,6 @@ function threatCheck() {
                     opponent.assailant.push(tempPiece);
                     threat = true;
                     break;
-                } else {
-                    threat = false;
                 }
             }
 
@@ -171,12 +169,6 @@ function actionCheck(target) {
                     move.addClass(player.name);
 
                     let threat = threatCheck();
-
-                    // debug
-                    //
-                    // for (const danger of player.dangerCases) {
-                    // danger.addClass("highlight-2");
-                    // }
 
                     // replace the piece
                     target.element.addClass(classes);
