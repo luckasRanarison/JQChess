@@ -2,14 +2,16 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #root {
-  min-height: 100vh;
-  min-width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: row;
+  min-height: 100vh;
+  min-width: 100vw;
   background: linear-gradient(#259fd8, #313744);
 }
 
@@ -126,6 +128,53 @@
     opacity: 1;
   }
 }
+#popup-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  display: none;
+  position: fixed;
+  min-height: 100vh;
+  min-width: 100vw;
+  -webkit-backdrop-filter: blur(10px) brightness(50%);
+          backdrop-filter: blur(10px) brightness(50%);
+  -webkit-animation: appear 0.1s;
+          animation: appear 0.1s;
+}
+
+#popup-screen.visible {
+  display: flex;
+}
+
+#popup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 2rem;
+  min-width: 400px;
+  min-height: 275px;
+  border-radius: 15px;
+  box-shadow: inset 0px 0 1px #ffffff;
+  background-color: rgba(215, 222, 223, 0.3019607843);
+}
+#popup img {
+  margin: 1.5rem 0;
+  height: 100px;
+}
+#popup div {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffd064;
+}
+#popup .white {
+  color: #ffffff;
+}
+#popup .black {
+  color: #000000;
+}
+
 td.black.pawn div {
   background-image: url("../assets/b_pawn.png ");
 }

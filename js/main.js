@@ -66,9 +66,6 @@ function move() {
 
     if (player.checkmate) $(`${player.className}.king`).addClass("highlight-2");
 
-    console.log("player: ", player.name);
-    console.log("checkmate: ", player.checkmate);
-
     !victoryCheck() ? alternate() : end();
 }
 
@@ -261,8 +258,6 @@ function victoryCheck() {
             kingPiece.clearMoves();
         }
 
-        console.log(`king move: ${kingMove}`);
-
         if (!kingMove) {
             // test if other pieces can move
             for (const piece of $(player.className)) {
@@ -276,8 +271,6 @@ function victoryCheck() {
                     break;
                 }
             }
-
-            console.log(`action: ${action}`);
         }
 
         if (!kingMove && !action) {
@@ -287,8 +280,29 @@ function victoryCheck() {
 }
 
 function end() {
-    console.log(`${opponent.name} won!!!`);
-    // todo
+    // winner display message
+    let winner = opponent.name.toUpperCase();
+
+    $("#root").append(
+        `<div id="popup-screen" class="visible">
+            <div id="popup">
+                <div>CHECKMATE</div>
+                <img src="./assets/trophy.png" alt="Victory" />
+                <div>
+                    <span id="winner" class="${opponent.name}">${winner}</span>
+                    <span>Won !</span>
+                </div>
+            </div>
+        </div>`
+    );
+
+    $("#popup-screen").on("click", function () {
+        $(this).remove();
+    });
+
+    // disable click event
+    $(player.className).off();
+    $(opponent.className).off();
 }
 
 function reset() {
