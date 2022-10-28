@@ -8,8 +8,9 @@ function movePawn(target) {
 
         if (temp.hasClass("white") || temp.hasClass("black")) {
             break;
+        } else {
+            target.possibleMoves.push(temp);
         }
-        target.possibleMoves.push(temp);
     }
 
     // capture
@@ -21,6 +22,26 @@ function movePawn(target) {
     for (const capt of captures) {
         if (capt.hasClass(opponent.name)) {
             target.possibleCaptures.push(capt);
+        }
+    }
+
+    // en passant
+    let case1 = atIndex(target.y, check(target.x + 1));
+    let case2 = atIndex(target.y, check(target.x - 1));
+
+    let cases = [case1, case2];
+
+    for (const cs of cases) {
+        if (cs.hasClass("en-passant")) {
+            let x = cs.index();
+            let y = player.operation(cs.parent().index());
+            let temp = atIndex(y, x);
+
+            if (!temp.hasClass("white") && !temp.hasClass("black")) {
+                target.enPassant = temp;
+            }
+
+            break;
         }
     }
 }

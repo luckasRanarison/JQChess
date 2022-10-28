@@ -5,7 +5,7 @@ function getProps(target) {
     let element = $(target);
     let classList = target.classList;
     let x = element.index();
-    let y = element.parent().index("tr");
+    let y = element.parent().index();
 
     for (const moveType in MOVES) {
         if ($(target).hasClass(moveType)) {
@@ -48,15 +48,42 @@ function selection() {
         capt.addClass("highlight-2");
         capt.on("click", move);
     }
+
+    if (currentPiece.enPassant) {
+        currentPiece.enPassant.addClass("highlight-1");
+        currentPiece.enPassant.on("click", move);
+    }
 }
 
 // subsitute class between two elements to simulate a move
 function move() {
+    if (currentPiece.enPassant) {
+        $(".en-passant").removeClass();
+    }
+
     $(this).removeClass();
     $(this).addClass(currentPiece.classList.value);
 
     currentPiece.element.removeAttr("class");
     currentPiece.element.off();
+
+    // remove expired en passant possibilty
+    $(".en-passant").removeClass("en-passant");
+
+    // check for pawn promotion and en passant
+    if (currentPiece.type === "pawn") {
+        let destination = $(this).parent().index();
+
+        if (currentPiece.y === player.frontLine) {
+            if (destination === player.operation(player.frontLine, 2)) {
+                $(this).addClass("en-passant");
+            }
+        }
+
+        if (destination === opponent.secondLine) {
+            pawnPromotion($(this));
+        }
+    }
 
     disableMoves();
 
@@ -71,6 +98,8 @@ function move() {
 
 // disable event listeners for previous possible moves
 function disableMoves() {
+    $(".highlight").removeClass("highlight");
+
     for (const mv of currentPiece.possibleMoves) {
         mv.removeClass("highlight highlight-1");
         mv.off();
@@ -224,6 +253,35 @@ function actionCheck(target) {
     }
 }
 
+function pawnPromotion(target) {
+    $("#root").append(
+        ` <div class="popup-screen visible">
+            <div class="popup promotion">
+                <div>Choose a piece</div>
+                <div class="grid-container">
+                    <img src="./assets/queen_outline.png" alt="Queen" class="queen" />
+                    <img src="./assets/rook_outline.png" alt="Rook" class="rook" />
+                    <img src="./assets/bishop_outline.png" alt="Bishop" class="bishop"/>
+                    <img src="./assets/knight_outline.png" alt="Knight" class="knight"/>
+                </div>
+            </div>
+        </div>`
+    );
+
+    $(".grid-container > img").on("click", function () {
+        target.removeClass("pawn");
+        target.addClass(this.className);
+
+        closePopup();
+    });
+
+    player.checkmate = threatCheck();
+
+    if (player.checkmate) $(`${player.className}.king`).addClass("highlight-2");
+
+    if (victoryCheck()) end();
+}
+
 // swap players
 function swapPlayers() {
     [player, opponent] = [opponent, player];
@@ -284,8 +342,8 @@ function end() {
     let winner = opponent.name.toUpperCase();
 
     $("#root").append(
-        `<div id="popup-screen" class="visible">
-            <div id="popup">
+        `<div class="popup-screen visible" onclick="closePopup()">
+            <div class="popup victory">
                 <div>CHECKMATE</div>
                 <img src="./assets/trophy.png" alt="Victory" />
                 <div>
@@ -296,10 +354,6 @@ function end() {
         </div>`
     );
 
-    $("#popup-screen").on("click", function () {
-        $(this).remove();
-    });
-
     // disable click event
     $(player.className).off();
     $(opponent.className).off();
@@ -307,4 +361,9 @@ function end() {
 
 function reset() {
     // todo
+}
+
+// some other event listeners
+function closePopup() {
+    $(".popup-screen").remove();
 }

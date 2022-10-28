@@ -134,28 +134,31 @@
     }
 }
 
-#popup-screen {
+.popup-screen {
     @include flexCenter(row);
     display: none;
     position: fixed;
     min-height: 100vh;
     min-width: 100vw;
     backdrop-filter: blur(10px) brightness(50%);
-    animation: appear 0.1s;
+    animation: appear 0.2s;
 }
 
-#popup-screen.visible {
+.popup-screen.visible {
     display: flex;
 }
 
-#popup {
-    @include flexCenter(column);
+.popup {
     padding: 2rem;
     min-width: 400px;
     min-height: 275px;
     border-radius: 15px;
     box-shadow: inset 0px 0 1px #ffffff;
     background-color: #d7dedf4d;
+}
+
+.popup.victory {
+    @include flexCenter(column);
 
     img {
         margin: 1.5rem 0;
@@ -173,7 +176,31 @@
     }
 
     .black {
-        color: #000000;
+        color: #121212;
+    }
+}
+
+.popup.promotion {
+    div {
+        margin-bottom: 1.5rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ffffff;
+    }
+
+    .grid-container {
+        display: grid;
+        justify-content: space-evenly;
+        grid-template-columns: auto auto;
+        gap: 2rem;
+
+        img {
+            height: 100px;
+            width: 100px;
+            padding: 1rem;
+            cursor: pointer;
+        }
     }
 }
 
