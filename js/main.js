@@ -33,7 +33,7 @@ function selection() {
     currentPiece.element.addClass("highlight");
 
     // test if the piece can move (not protecting the king)
-    actionCheck(currentPiece);
+    if (currentPiece.type !== "king") actionCheck(currentPiece);
 
     // call the function relative to the piece type (see moves.js)
     if (currentPiece.normalMoves) MOVES[currentPiece.type](currentPiece);
@@ -89,7 +89,7 @@ function disableMoves() {
 
 function threatCheck() {
     let threat = false;
-    player.dangerCases = [];
+    player.threatMap = [];
     player.assailant = undefined;
 
     // swap two players temporarily to simulate attacks
@@ -104,24 +104,34 @@ function threatCheck() {
             let case1 = atIndex(player.operation(tempPiece.y), tempPiece.x + 1);
             let case2 = atIndex(player.operation(tempPiece.y), tempPiece.x - 1);
 
-            opponent.dangerCases.push(case1, case2);
+            opponent.threatMap.push(case1, case2);
+
+            let temp = [case1, case2];
+
+            for (const capt of temp) {
+                if (capt.hasClass(`${opponent.name} king`)) {
+                    opponent.assailant = tempPiece;
+                    threat = true;
+                    break;
+                }
+            }
         } else {
             tempPiece.type === "king"
                 ? MOVES["king"](tempPiece, false)
                 : MOVES[tempPiece.type](tempPiece);
 
             for (const capt of tempPiece.possibleCaptures) {
-                if (capt.hasClass("king")) {
+                if (capt.hasClass(`${opponent.name} king`)) {
                     opponent.assailant = tempPiece;
                     threat = true;
                     break;
                 }
             }
 
-            opponent.dangerCases = opponent.dangerCases.concat(
+            opponent.threatMap = opponent.threatMap.concat(
                 tempPiece.possibleMoves
             );
-            opponent.dangerCases = opponent.dangerCases.concat(
+            opponent.threatMap = opponent.threatMap.concat(
                 tempPiece.possibleCaptures
             );
         }
@@ -133,7 +143,7 @@ function threatCheck() {
 
     // for debug purposes
 
-    // for (const danger of player.dangerCases) {
+    // for (const danger of player.threatMap) {
     //     danger.addClass("highlight-2");
     // }
 
@@ -150,13 +160,13 @@ function actionCheck(target) {
 
     target.element.addClass(classes);
 
-    for (const danger of player.dangerCases) {
+    for (const danger of player.threatMap) {
         // test if the piece can take actions (protect, capture)
-        if (danger.hasClass(`${player.name} king`) && target.type !== "king") {
+        if (danger.hasClass(`${player.name} king`)) {
             // verify if there is only one assailant
             if (player.assailant) {
                 // verify if the piece can protect the king
-                let protect = false;
+                let [protect, capture] = [false, false];
                 let temp = [];
                 let blockMoves = [];
 
@@ -194,19 +204,20 @@ function actionCheck(target) {
                     target.possibleMoves = blockMoves;
                 }
 
-                // verify if the selected piece can capture the assailant
-                let capture = target.possibleCaptures.some(
-                    (capt) => capt.index("td") === assailant.element.index("td")
-                );
+                for (const capt of target.possibleCaptures) {
+                    capture =
+                        capt.index("td") === assailant.element.index("td");
+
+                    if (capture) {
+                        target.possibleCaptures = [capt];
+                        break;
+                    }
+                }
 
                 if (!protect) target.possibleMoves = [];
                 if (!capture) target.possibleCaptures = [];
 
                 if (protect || capture) target.specialActions = true;
-
-                // console.log(`action: ${target.specialActions}`);
-
-                // console.log(`protect: ${protect}, capture: ${capture}`);
             }
 
             // immobize pieces defending the king if they can't do other actions
@@ -223,13 +234,14 @@ function swapPlayers() {
 
 // swap click event
 function alternate() {
-    $(player.className).on("click", selection);
-    $(opponent.className).off();
-
-    console.log(`It's ${player.name}'s turn`);
+    // debug
+    // $(".highlight-2").removeClass("highlight-2");
 
     // remove king highlighting
-    $(".king").removeClass("highlight-2");
+    $(`${opponent.className}.king`).removeClass("highlight-2");
+
+    $(player.className).on("click", selection);
+    $(opponent.className).off();
 }
 
 function victoryCheck() {
@@ -245,9 +257,9 @@ function victoryCheck() {
 
         if (!kingPiece.checkMoves()) {
             kingMove = false;
+        } else {
+            kingPiece.clearMoves();
         }
-
-        kingPiece.clearMoves();
 
         console.log(`king move: ${kingMove}`);
 

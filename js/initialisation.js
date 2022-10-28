@@ -6,7 +6,7 @@ class Player {
         this.operation = operation;
         this.checkmate = false;
         this.assailant = undefined;
-        this.dangerCases = [];
+        this.threatMap = [];
     }
 }
 
@@ -34,6 +34,8 @@ class Piece {
             this.possibleMoves.length === 0
         ) {
             return false;
+        } else {
+            return true;
         }
     }
 }

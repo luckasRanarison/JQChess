@@ -85,7 +85,7 @@ function moveKing(target, danger = true) {
     let y = target.y;
     let operation = increment;
 
-    // loop twice to get all 8 possible moves
+    // loop tice to get all 8 possible moves
     for (let i = 0; i < 2; i++) {
         temp.push(
             atIndex(check(operation(y)), check(x - 1)),
@@ -109,7 +109,7 @@ function moveKing(target, danger = true) {
 
             threatCheck();
 
-            for (const danger of player.dangerCases) {
+            for (const danger of player.threatMap) {
                 if (danger.index("td") === t.index("td")) {
                     invalidMove = true;
                     break;
@@ -131,7 +131,7 @@ function moveKing(target, danger = true) {
             // array.includes didn't work so this is a workaround
 
             if (danger) {
-                for (const danger of player.dangerCases) {
+                for (const danger of player.threatMap) {
                     if (danger.index("td") === t.index("td")) {
                         invalidMove = true;
                         break;
