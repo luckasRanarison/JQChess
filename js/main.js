@@ -50,6 +50,7 @@ function selection() {
     }
 
     if (currentPiece.enPassant) {
+        $(".en-passant").addClass("highlight-2");
         currentPiece.enPassant.addClass("highlight-1");
         currentPiece.enPassant.on("click", move);
     }
@@ -98,19 +99,12 @@ function move() {
 
 // disable event listeners for previous possible moves
 function disableMoves() {
+    $(".highlight-1").off();
+    $(".highlight-2").off();
+
     $(".highlight").removeClass("highlight");
-
-    for (const mv of currentPiece.possibleMoves) {
-        mv.removeClass("highlight highlight-1");
-        mv.off();
-    }
-
-    for (const capt of currentPiece.possibleCaptures) {
-        capt.removeClass("highlight highlight-2");
-        capt.off();
-    }
-
-    currentPiece.clearMoves();
+    $(".highlight-1").removeClass("highlight-1");
+    $(".highlight-2").removeClass("highlight-2");
 }
 
 function threatCheck() {
@@ -161,8 +155,6 @@ function threatCheck() {
                 tempPiece.possibleCaptures
             );
         }
-
-        tempPiece.clearMoves();
     });
 
     swapPlayers();
@@ -312,8 +304,6 @@ function victoryCheck() {
 
         if (!kingPiece.checkMoves()) {
             kingMove = false;
-        } else {
-            kingPiece.clearMoves();
         }
 
         if (!kingMove) {
@@ -325,7 +315,6 @@ function victoryCheck() {
 
                 if (tempPiece.specialActions) {
                     action = true;
-                    tempPiece.clearMoves();
                     break;
                 }
             }

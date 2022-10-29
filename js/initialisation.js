@@ -22,24 +22,13 @@ class Piece {
         this.specialActions = false;
         this.possibleMoves = [];
         this.possibleCaptures = [];
-        this.enPassant = undefined;
-    }
-
-    clearMoves() {
-        this.possibleMoves = [];
-        this.possibleCaptures = [];
-        this.enPassant = undefined;
     }
 
     checkMoves() {
-        if (
-            this.possibleCaptures.length === 0 &&
-            this.possibleMoves.length === 0
-        ) {
-            return false;
-        } else {
-            return true;
-        }
+        let canMove = this.possibleMoves.length === 0;
+        let canCapture = this.possibleCaptures.length === 0;
+
+        !canCapture && !canMove ? false : true;
     }
 }
 
