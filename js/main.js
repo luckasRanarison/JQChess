@@ -105,6 +105,11 @@ function disableMoves() {
     $(".highlight").removeClass("highlight");
     $(".highlight-1").removeClass("highlight-1");
     $(".highlight-2").removeClass("highlight-2");
+
+    if (player.checkmate) {
+        $(`${player.className}.king`).addClass("highlight-2");
+        $(`${player.className}.king`).on("click", selection);
+    }
 }
 
 function threatCheck() {
@@ -159,7 +164,7 @@ function threatCheck() {
 
     swapPlayers();
 
-    // for debug purposes
+    // for threatmap debug purposes
 
     // for (const danger of player.threatMap) {
     //     danger.addClass("highlight-2");
@@ -197,6 +202,7 @@ function actionCheck(target) {
                     for (const path of assailant.possibleMoves) {
                         if (mv.index("td") === path.index("td")) {
                             temp.push(mv);
+                            break;
                         }
                     }
                 }
@@ -247,31 +253,40 @@ function actionCheck(target) {
 
 function pawnPromotion(target) {
     $("#root").append(
-        ` <div class="popup-screen visible">
+        `<div class="popup-screen visible">
             <div class="popup promotion">
-                <div>Choose a piece</div>
+                <div class="text">Choose a piece</div>
                 <div class="grid-container">
-                    <img src="./assets/queen_outline.png" alt="Queen" class="queen" />
-                    <img src="./assets/rook_outline.png" alt="Rook" class="rook" />
-                    <img src="./assets/bishop_outline.png" alt="Bishop" class="bishop"/>
-                    <img src="./assets/knight_outline.png" alt="Knight" class="knight"/>
+                    <div class="queen">
+                        <img src="./assets/queen.png" /><div class="text">Queen</div>
+                    </div>
+                    <div class="rook">
+                        <img src="./assets/rook.png" /><div class="text">Rook</div>
+                    </div>
+                    <div class="bishop">
+                        <img src="./assets/bishop.png" /><div class="text">Bishop</div>
+                    </div>
+                    <div class="knight">
+                        <img src="./assets/knight.png" /><div>Knight</div>
+                    </div>
                 </div>
             </div>
         </div>`
     );
 
-    $(".grid-container > img").on("click", function () {
+    $(".grid-container > div").on("click", function () {
         target.removeClass("pawn");
         target.addClass(this.className);
 
         closePopup();
+
+        player.checkmate = threatCheck();
+
+        if (player.checkmate)
+            $(`${player.className}.king`).addClass("highlight-2");
+
+        if (victoryCheck()) end();
     });
-
-    player.checkmate = threatCheck();
-
-    if (player.checkmate) $(`${player.className}.king`).addClass("highlight-2");
-
-    if (victoryCheck()) end();
 }
 
 // swap players
@@ -281,10 +296,10 @@ function swapPlayers() {
 
 // swap click event
 function alternate() {
-    // debug
+    // for threatmap debug
     // $(".highlight-2").removeClass("highlight-2");
 
-    // remove king highlighting
+    // remove red highlighting
     $(`${opponent.className}.king`).removeClass("highlight-2");
 
     $(player.className).on("click", selection);
@@ -353,6 +368,4 @@ function reset() {
 }
 
 // some other event listeners
-function closePopup() {
-    $(".popup-screen").remove();
-}
+const closePopup = () => $(".popup-screen").remove();

@@ -181,8 +181,8 @@
 }
 
 .popup.promotion {
-    div {
-        margin-bottom: 1.5rem;
+    .text {
+        margin-bottom: 1rem;
         text-align: center;
         font-size: 1.5rem;
         font-weight: bold;
@@ -191,9 +191,15 @@
 
     .grid-container {
         display: grid;
-        justify-content: space-evenly;
+        justify-content: space-around;
         grid-template-columns: auto auto;
-        gap: 2rem;
+
+        div {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
 
         img {
             height: 100px;

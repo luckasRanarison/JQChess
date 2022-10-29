@@ -24,11 +24,12 @@ class Piece {
         this.possibleCaptures = [];
     }
 
+    // only used for the king
     checkMoves() {
-        let canMove = this.possibleMoves.length === 0;
-        let canCapture = this.possibleCaptures.length === 0;
+        let canMove = this.possibleMoves.length !== 0;
+        let canCapture = this.possibleCaptures.length !== 0;
 
-        !canCapture && !canMove ? false : true;
+        return canCapture || canMove ? true : false;
     }
 }
 
