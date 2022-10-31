@@ -147,10 +147,19 @@ function moveKing(target, danger = true) {
             continue;
         }
 
+        if (danger) {
+            let kingClass = target.element[0].className;
+
+            target.element.removeClass();
+
+            threatCheck();
+
+            target.element.addClass(kingClass);
+        }
+
         // move
         if (!t.hasClass(player.name) && t.length !== 0) {
             // array.includes didn't work so this is a workaround
-
             if (danger) {
                 for (const danger of player.threatMap) {
                     if (danger.index("td") === t.index("td")) {
