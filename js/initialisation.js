@@ -1,10 +1,9 @@
 class Player {
-    constructor(name, className, frontLine, secondLine, operation) {
+    constructor(name, className, secondLine, operation) {
         this.name = name;
         this.className = className;
-        this.frontLine = frontLine; // for pawn moves
         this.secondLine = secondLine; // for pawn promotion
-        this.operation = operation;
+        this.operation = operation; // for pawn moves
         this.checkmate = false;
         this.assailant = undefined;
         this.threatMap = [];
@@ -81,13 +80,15 @@ function initialisation() {
 
     $("td:eq(2), td:eq(5), td:eq(58), td:eq(61)").addClass("bishop");
 
-    $("td:eq(3), td:eq(59)").addClass("king");
+    $("td:eq(3), td:eq(59)").addClass("queen");
 
-    $("td:eq(4), td:eq(60)").addClass("queen");
+    $("td:eq(4), td:eq(60)").addClass("king");
+
+    $(".pawn, .rook, .king").addClass("move");
 
     // variables initialisation
-    player = new Player("white", ".white", 6, 7, decrement);
-    opponent = new Player("black", ".black", 1, 0, increment);
+    player = new Player("white", ".white", 7, decrement);
+    opponent = new Player("black", ".black", 0, increment);
 
     currentPiece = new Piece();
 

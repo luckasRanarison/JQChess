@@ -54,6 +54,9 @@ function selection() {
         currentPiece.enPassant.addClass("highlight-1");
         currentPiece.enPassant.on("click", move);
     }
+
+    $(".castling").addClass("highlight-1");
+    $(".castling").on("click", castling);
 }
 
 // subsitute class between two elements to simulate a move
@@ -64,6 +67,8 @@ function move() {
 
     $(this).removeClass();
     $(this).addClass(currentPiece.classList.value);
+    // remove special moves abilty (pawn 2 cases move & castling)
+    $(this).removeClass("move");
 
     currentPiece.element.removeAttr("class");
     currentPiece.element.off();
@@ -75,8 +80,8 @@ function move() {
     if (currentPiece.type === "pawn") {
         let destination = $(this).parent().index();
 
-        if (currentPiece.y === player.frontLine) {
-            if (destination === player.operation(player.frontLine, 2)) {
+        if (currentPiece.y === player.operation(player.secondLine)) {
+            if (destination === player.operation(player.secondLine, 3)) {
                 $(this).addClass("en-passant");
             }
         }
@@ -87,12 +92,7 @@ function move() {
     }
 
     disableMoves();
-
     swapPlayers();
-
-    player.checkmate = threatCheck();
-
-    if (player.checkmate) $(`${player.className}.king`).addClass("highlight-2");
 
     !victoryCheck() ? alternate() : end();
 }
@@ -101,7 +101,9 @@ function move() {
 function disableMoves() {
     $(".highlight-1").off();
     $(".highlight-2").off();
+    $(".castling").off();
 
+    $(".castling").removeClass("castling");
     $(".highlight").removeClass("highlight");
     $(".highlight-1").removeClass("highlight-1");
     $(".highlight-2").removeClass("highlight-2");
@@ -110,6 +112,36 @@ function disableMoves() {
         $(`${player.className}.king`).addClass("highlight-2");
         $(`${player.className}.king`).on("click", selection);
     }
+}
+
+function castling() {
+    let index = $(this).index();
+    let row = $(this).parent();
+    let rookPos, rookTarget;
+
+    if (index > currentPiece.x) {
+        rookPos = 7;
+        rookTarget = 5;
+    } else {
+        rookPos = 0;
+        rookTarget = 3;
+    }
+
+    row.children(`td:eq(${rookPos})`).removeAttr("class");
+    row.children(`td:eq(${rookTarget})`).addClass(`${player.name} rook`);
+    row.children(`td:eq(${rookPos})`).off();
+
+    $(this).removeClass();
+    $(this).addClass(`${player.name} king`);
+    $(this).off();
+
+    currentPiece.element.removeAttr("class");
+    currentPiece.element.off();
+
+    disableMoves();
+    swapPlayers();
+
+    !victoryCheck() ? alternate() : end();
 }
 
 function threatCheck() {
@@ -307,6 +339,9 @@ function alternate() {
 }
 
 function victoryCheck() {
+    player.checkmate = threatCheck();
+    if (player.checkmate) $(`${player.className}.king`).addClass("highlight-2");
+
     let kingMove = true;
     let action = false;
 

@@ -1,6 +1,6 @@
 function movePawn(target) {
     // moves
-    target.y === player.frontLine ? (max = 2) : (max = 1);
+    target.element.hasClass("move") ? (max = 2) : (max = 1);
 
     // pawn move differently for the two players, that's why each player have his own method
     for (let i = 1; i <= max; i++) {
@@ -171,6 +171,41 @@ function moveKing(target, danger = true) {
 
             if (!invalidMove) target.possibleMoves.push(t);
         }
+    }
+
+    // castling
+    if (danger && !player.checkmate && target.element.hasClass("move")) {
+        let row = target.element.parent();
+        castlingCheck(row, 1, 4, 2);
+        castlingCheck(row, 5, 7, 6);
+    }
+}
+
+function castlingCheck(row, pos1, pos2, kingTarget) {
+    let threat = false;
+    let empty = true;
+    let cases = row.children().slice(pos1, pos2);
+
+    for (const cs of cases) {
+        if (cs.className !== "") {
+            empty = false;
+            break;
+        }
+    }
+
+    if (empty) {
+        for (const danger of player.threatMap) {
+            if (
+                danger.index("td") === row.children().eq(kingTarget).index("td")
+            ) {
+                threat = true;
+                break;
+            }
+        }
+    }
+
+    if (empty && !threat) {
+        row.children().eq(kingTarget).addClass("castling");
     }
 }
 
