@@ -56,15 +56,11 @@ function selection() {
     }
 
     $(".castling").addClass("highlight-1");
-    $(".castling").on("click", castling);
+    $(".castling").on("click", true, move); // the move is a castling
 }
 
 // subsitute class between two elements to simulate a move
-function move() {
-    if (currentPiece.enPassant) {
-        $(".en-passant").removeClass();
-    }
-
+function move(castling) {
     $(this).removeClass();
     $(this).addClass(currentPiece.classList.value);
     // remove special moves abilty (pawn 2 cases move & castling)
@@ -72,6 +68,30 @@ function move() {
 
     currentPiece.element.removeAttr("class");
     currentPiece.element.off();
+
+    // en passant capture
+    if (currentPiece.enPassant) {
+        $(".en-passant").removeClass();
+    }
+
+    // the move is a castling
+    if (castling.data === true) {
+        let index = $(this).index();
+        let row = $(this).parent();
+        let rookPos, rookTarget;
+
+        if (index > currentPiece.x) {
+            rookPos = 7;
+            rookTarget = 5;
+        } else {
+            rookPos = 0;
+            rookTarget = 3;
+        }
+
+        row.children(`td:eq(${rookPos})`).removeAttr("class");
+        row.children(`td:eq(${rookTarget})`).addClass(`${player.name} rook`);
+        row.children(`td:eq(${rookPos})`).off();
+    }
 
     // remove expired en passant possibilty
     $(".en-passant").removeClass("en-passant");
@@ -112,36 +132,6 @@ function disableMoves() {
         $(`${player.className}.king`).addClass("highlight-2");
         $(`${player.className}.king`).on("click", selection);
     }
-}
-
-function castling() {
-    let index = $(this).index();
-    let row = $(this).parent();
-    let rookPos, rookTarget;
-
-    if (index > currentPiece.x) {
-        rookPos = 7;
-        rookTarget = 5;
-    } else {
-        rookPos = 0;
-        rookTarget = 3;
-    }
-
-    row.children(`td:eq(${rookPos})`).removeAttr("class");
-    row.children(`td:eq(${rookTarget})`).addClass(`${player.name} rook`);
-    row.children(`td:eq(${rookPos})`).off();
-
-    $(this).removeClass();
-    $(this).addClass(`${player.name} king`);
-    $(this).off();
-
-    currentPiece.element.removeAttr("class");
-    currentPiece.element.off();
-
-    disableMoves();
-    swapPlayers();
-
-    !victoryCheck() ? alternate() : end();
 }
 
 function threatCheck() {
