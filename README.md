@@ -11,7 +11,10 @@
   <h3 align="center">JQChess</h3>
 
   <p align="center">A chess game made using DOM manipulation with JQuery.</p>
+  <p>Try it now by clicking the following link: https://luckasranarison.github.io/JQChess/</p>
 </div>
+
+
 
 # Description
 This is not an efficient chess implementation (I don't even play chess), I decided to manipulate ojects directly to perform some specific queries because my goal with this project was to explore jQuery.
