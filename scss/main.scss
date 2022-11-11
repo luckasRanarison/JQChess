@@ -19,6 +19,38 @@
     background: linear-gradient(#259fd8, #313744);
 }
 
+#right-panel {
+    position: absolute;
+    right: 25px;
+    padding: 1rem;
+    border-radius: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: #f5f5f5;
+    background-color: #e9f1f157;
+
+    .option {
+        margin: 1.2rem 0;
+        cursor: pointer;
+
+        &:hover img {
+            scale: 1.4;
+        }
+    }
+
+    a {
+        text-decoration: none;
+        font-family: bold;
+        color: #f5f5f5;
+    }
+
+    img {
+        width: 30px;
+        margin-bottom: 0.2rem;
+        transition: 0.2s;
+    }
+}
+
 #chess-board {
     box-shadow: 0 0 10px #3d3d3d52;
     border-radius: 20px;

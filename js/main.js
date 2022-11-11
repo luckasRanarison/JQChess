@@ -384,12 +384,13 @@ function end() {
     );
 
     // disable click event
+    disableMoves();
     $(player.className).off();
-    $(opponent.className).off();
 }
 
 function reset() {
-    // todo
+    $("tr").remove();
+    initialisation();
 }
 
 // some other event listeners

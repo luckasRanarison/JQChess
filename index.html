@@ -11,6 +11,23 @@
     <body>
         <div id="root">
             <table id="chess-board"></table>
+
+            <div id="right-panel">
+                <div class="option">
+                    <a href="https://www.chess.com/learn-how-to-play-chess">
+                        <img src="./assets/book.svg" />
+                        <div>Rules</div></a
+                    >
+                </div>
+                <div class="option" onclick="end()">
+                    <img src="./assets/flag.svg" />
+                    <div>Resign</div>
+                </div>
+                <div class="option" onclick="reset()">
+                    <img src="./assets/repeat.svg" alt="" srcset="" />
+                    <div>Reset</div>
+                </div>
+            </div>
         </div>
 
         <script src="./js/jquery.min.js"></script>
