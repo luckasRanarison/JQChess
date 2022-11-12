@@ -274,7 +274,9 @@ function actionCheck(target) {
 }
 
 function pawnPromotion(target) {
-    $("#root").append(
+    $("#root").addClass("blur");
+
+    $("body").append(
         `<div class="popup-screen visible">
             <div class="popup promotion">
                 <div class="text">Choose a piece</div>
@@ -370,7 +372,9 @@ function end() {
     // winner display message
     let winner = opponent.name.toUpperCase();
 
-    $("#root").append(
+    $("#root").addClass("blur");
+
+    $("body").append(
         `<div class="popup-screen visible" onclick="closePopup()">
             <div class="popup victory">
                 <div>CHECKMATE</div>
@@ -386,12 +390,17 @@ function end() {
     // disable click event
     disableMoves();
     $(player.className).off();
+    $("#resign").attr("disabled", true);
 }
 
 function reset() {
     $("tr").remove();
+    $("#resign").attr("disabled", false);
     initialisation();
 }
 
 // some other event listeners
-const closePopup = () => $(".popup-screen").remove();
+function closePopup() {
+    $(".popup-screen").remove();
+    $("#root").removeClass("blur");
+}

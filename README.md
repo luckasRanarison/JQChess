@@ -14,10 +14,10 @@
   <p>Try it now by clicking the following link: https://luckasranarison.github.io/JQChess/</p>
 </div>
 
-
-
 # Description
+
 This is not an efficient chess implementation (I don't even play chess), I decided to manipulate ojects directly to perform some specific queries because my goal with this project was to explore jQuery.
+
 <p>The game includes all advanced chess moves: </p>
 <ul>
   <li>Castling</li>
@@ -26,15 +26,23 @@ This is not an efficient chess implementation (I don't even play chess), I decid
 </ul>
 It's still missing a lot of features like timer, unsufficient material check...
 
+<br/>
+
 # Preview
-It's not responsive yet so it may not correctly render on mobile devices. <br/>
 
-**NOTE:** Some browsers may not support backdrop filter.
+Desktop/mobile view
 
-<img src="/preview.png"/>
+<div >
+  <img src="/preview.png" height="350px" width="75%"/>
+  <img src="/preview2.png" height="350px" align="right"/>
+</div>
+
+<br/>
 
 # Credits
+
 All assets used in the game are from the following websites:
+
 <ul>
   <li>
     <a href="https://opengameart.org/content/chess-pieces-and-board-squares">JohnPablok's improved Cburnett chess set</a>
