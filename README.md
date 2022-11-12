@@ -24,20 +24,14 @@ This is not an efficient chess implementation (I don't even play chess), I decid
   <li>Pawn promotion</li>
   <li>En passant</li>
 </ul>
-It's still missing a lot of features like timer, unsufficient material check...
-
-<br/>
+It's still missing a lot of features like timer, unsufficient material check...<br/>
 
 # Preview
 
-Desktop/mobile view
-
-<div >
-  <img src="/preview.png" height="350px" width="75%"/>
-  <img src="/preview2.png" height="350px" align="right"/>
-</div>
-
-<br/>
+<img src="/preview.png"/>
+<p align="center">Desktop/tablet view</p>
+<div align="center"><img src="/preview2.png"/></div><br/>
+<p align="center">Mobile view</p><br/>
 
 # Credits
 
